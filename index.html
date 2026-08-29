@@ -217,7 +217,7 @@
         .bot-detail-name { font-size: 26px; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
         .bot-detail-price { font-size: 24px; font-weight: 700; margin-bottom: 20px; }
         .bot-detail-description {
-            font-size: 15px;
+            font-size: 14px;
             line-height: 1.6;
             color: var(--text-secondary);
             margin-bottom: 24px;
@@ -544,6 +544,18 @@
                     <p class="username" id="profile-username">@user</p>
                 </div>
                 <div class="profile-stats">
+                    <div class="stat-item" onclick="showPage('instructions')">
+                        <span class="stat-label">❓ Как это работает</span>
+                        <span class="stat-arrow">›</span>
+                    </div>
+                    <div class="stat-item" onclick="showPage('terms')">
+                        <span class="stat-label">📄 Пользовательское соглашение</span>
+                        <span class="stat-arrow">›</span>
+                    </div>
+                    <div class="stat-item" onclick="showPage('privacy')">
+                        <span class="stat-label">🔒 Политика конфиденциальности</span>
+                        <span class="stat-arrow">›</span>
+                    </div>
                     <div class="stat-item" onclick="showPage('favorites')">
                         <span class="stat-label">Избранное</span>
                         <span class="stat-arrow">›</span>
@@ -576,10 +588,10 @@
                     3. Добавь объект:<br>
 <pre>{
   id: 7,
-  type: "bot", // или "service"
+  type: "bot", 
   name: "Название",
   price: 490,
-  image: "img/mybot.jpg", // путь к JPG картинке
+  image: "img/mybot.jpg", 
   description: "Описание..."
 }</pre>
                     4. Сохрани изменения.
@@ -587,6 +599,49 @@
                 <div id="admin-bot-list"></div>
             </div>
             <div class="footer">create by <a href="https://t.me/z9hie">@z9hie</a></div>
+        </div>
+
+        <!-- ИНСТРУКЦИЯ -->
+        <div class="page" id="page-instructions">
+            <div class="page-content">
+                <h2 class="page-title">Как это работает</h2>
+                <div class="bot-detail-description">
+                    <p style="margin-bottom: 12px;"><strong>1. Выбор товара</strong><br>Выберите подходящего бота или услугу в каталоге.</p>
+                    <p style="margin-bottom: 12px;"><strong>2. Оформление</strong><br>Нажмите кнопку «Купить». Вы будете перенаправлены к нашему менеджеру или на форму оплаты.</p>
+                    <p style="margin-bottom: 12px;"><strong>3. Получение</strong><br>• Для готовых ботов: вы получите исходный код и инструкцию по запуску сразу после оплаты.<br>• Для услуг: мы свяжемся с вами в течение 2 часов для уточнения деталей ТЗ.</p>
+                    <p><strong>4. Поддержка</strong><br>По всем вопросам пишите в поддержку: <a href="https://t.me/number811" style="color: #fff; text-decoration: underline;">@number811</a></p>
+                </div>
+                <button class="btn-secondary" onclick="showPage('profile')">← Назад в профиль</button>
+            </div>
+        </div>
+
+        <!-- ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ (ОФЕРТА) -->
+        <div class="page" id="page-terms">
+            <div class="page-content">
+                <h2 class="page-title">Пользовательское соглашение</h2>
+                <div class="bot-detail-description" style="text-align: left;">
+                    <p style="margin-bottom: 10px;"><strong>1. Общие положения</strong><br>Настоящее соглашение регулирует отношения между Продавцом (QuickMarket) и Покупателем в рамках приобретения цифровых товаров (шаблоны Telegram-ботов) и услуг по их настройке.</p>
+                    <p style="margin-bottom: 10px;"><strong>2. Предмет соглашения</strong><br>Продавец обязуется передать Покупателю права на использование цифрового товара или оказать услугу, а Покупатель обязуется принять и оплатить их.</p>
+                    <p style="margin-bottom: 10px;"><strong>3. Порядок оплаты и доставки</strong><br>Оплата производится в рублях РФ. Доставка цифровых товаров осуществляется мгновенно после подтверждения оплаты (выдача файлов или доступа). Услуги оказываются в сроки, согласованные с менеджером.</p>
+                    <p style="margin-bottom: 10px;"><strong>4. Возврат средств</strong><br>В соответствии с законодательством РФ, возврат средств за цифровые товары надлежащего качества, доступ к которым был предоставлен, не производится. Возврат за услуги возможен только до начала их оказания.</p>
+                    <p><strong>5. Контакты</strong><br>Служба поддержки: <a href="https://t.me/number811" style="color: #fff;">@number811</a></p>
+                </div>
+                <button class="btn-secondary" onclick="showPage('profile')">← Назад в профиль</button>
+            </div>
+        </div>
+
+        <!-- ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ -->
+        <div class="page" id="page-privacy">
+            <div class="page-content">
+                <h2 class="page-title">Политика конфиденциальности</h2>
+                <div class="bot-detail-description" style="text-align: left;">
+                    <p style="margin-bottom: 10px;"><strong>1. Сбор данных</strong><br>Мы собираем только те данные, которые вы предоставляете добровольно при использовании Telegram Web App (Telegram ID, имя пользователя, никнейм) для идентификации и обработки заказов.</p>
+                    <p style="margin-bottom: 10px;"><strong>2. Использование данных</strong><br>Данные используются исключительно для: оформления заказов, технической поддержки, улучшения работы сервиса и отправки уведомлений о статусе заказа.</p>
+                    <p style="margin-bottom: 10px;"><strong>3. Защита и передача</strong><br>Мы не передаем ваши персональные данные третьим лицам, за исключением случаев, необходимых для проведения платежей (платежным агрегаторам) или требований закона.</p>
+                    <p><strong>4. Контакты</strong><br>По вопросам удаления данных обращайтесь: <a href="https://t.me/number811" style="color: #fff;">@number811</a></p>
+                </div>
+                <button class="btn-secondary" onclick="showPage('profile')">← Назад в профиль</button>
+            </div>
         </div>
 
         <!-- НАВИГАЦИЯ -->
@@ -631,8 +686,6 @@
 
         // ============================================
         // СПИСОК ТОВАРОВ (БОТЫ И УСЛУГИ)
-        // В поле image указывай путь к JPG, например: "img/bot1.jpg" 
-        // или оставь пустым "", тогда покажется иконка-заглушка.
         // ============================================
         const products = [
             {
@@ -640,7 +693,7 @@
                 type: "bot",
                 name: "Giveaway Bot",
                 price: 490,
-                image: "", // Вставь сюда путь, например: "img/giveaway.jpg"
+                image: "", 
                 description: "Автоматически проверяет подписку на канал, собирает участников и по таймеру выбирает случайного победителя. Идеально для розыгрышей."
             },
             {
@@ -689,7 +742,7 @@
                 name: "Бот под ваше ТЗ",
                 price: "Договорная",
                 image: "",
-                description: "Сделаю полноценного бота под ваше ТЗ"
+                description: "Сделаю полноценного бота под ваше индивидуальное техническое задание."
             }
         ];
         // ============================================
@@ -748,6 +801,8 @@
                        <div class="product-image-placeholder" style="display:none"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M12 8V4"/><circle cx="12" cy="3" r="1"/></svg></div>`
                     : `<div class="product-image-placeholder"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M12 8V4"/><circle cx="12" cy="3" r="1"/></svg></div>`;
 
+                const priceDisplay = typeof p.price === 'number' ? `${p.price} ₽` : p.price;
+
                 return `
                     <div class="product-card" onclick="showDetail(${p.id})">
                         <button class="product-fav ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFav(${p.id})">
@@ -759,7 +814,7 @@
                                 <div class="product-type">${typeLabel}</div>
                                 <div class="product-name">${p.name}</div>
                             </div>
-                            <div class="product-price">${p.price} ₽</div>
+                            <div class="product-price">${priceDisplay}</div>
                         </div>
                     </div>
                 `;
@@ -775,17 +830,19 @@
                 return;
             }
 
-            grid.innerHTML = favProducts.map(p => `
+            grid.innerHTML = favProducts.map(p => {
+                const priceDisplay = typeof p.price === 'number' ? `${p.price} ₽` : p.price;
+                return `
                 <div class="product-card" onclick="showDetail(${p.id})">
                     <button class="product-fav active" onclick="event.stopPropagation(); toggleFav(${p.id})">
                         <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
                     </button>
                     <div class="product-info">
                         <div class="product-name">${p.name}</div>
-                        <div class="product-price">${p.price} ₽</div>
+                        <div class="product-price">${priceDisplay}</div>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
         function showDetail(id) {
@@ -803,7 +860,8 @@
 
             document.getElementById('detail-type').textContent = p.type === 'bot' ? '🤖 Telegram Бот' : '🛠 Услуга';
             document.getElementById('detail-name').textContent = p.name;
-            document.getElementById('detail-price').textContent = `${p.price} ₽`;
+            const priceDisplay = typeof p.price === 'number' ? `${p.price} ₽` : p.price;
+            document.getElementById('detail-price').textContent = priceDisplay;
             document.getElementById('detail-description').textContent = p.description || 'Описание отсутствует';
             showPage('detail');
         }
@@ -820,10 +878,11 @@
             list.innerHTML = userOrders.map(o => {
                 const p = products.find(x => x.id === o.productId);
                 if (!p) return '';
+                const priceDisplay = typeof p.price === 'number' ? `${p.price} ₽` : p.price;
                 return `
                     <div class="order-card">
                         <div class="order-name">${p.name}</div>
-                        <div class="order-price">${p.price} ₽</div>
+                        <div class="order-price">${priceDisplay}</div>
                         <span class="order-status">Активен</span>
                         <div class="order-date">${o.date}</div>
                     </div>
@@ -834,17 +893,19 @@
         function renderAdmin() {
             const container = document.getElementById('admin-bot-list');
             container.innerHTML = '<h3 style="margin-bottom: 12px; font-size: 16px; font-weight: 600;">Управление товарами</h3>' +
-                products.map(p => `
+                products.map(p => {
+                    const priceDisplay = typeof p.price === 'number' ? `${p.price} ₽` : p.price;
+                    return `
                     <div class="admin-bot-item">
                         <div>
                             <div class="admin-bot-name">${p.name}</div>
-                            <div class="admin-bot-meta">${p.type === 'bot' ? 'Бот' : 'Услуга'} • ${p.price} ₽</div>
+                            <div class="admin-bot-meta">${p.type === 'bot' ? 'Бот' : 'Услуга'} • ${priceDisplay}</div>
                         </div>
                         <button class="admin-btn-sm" onclick="copyOrderLink(${p.id})" title="Скопировать ссылку">
                             <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
                         </button>
                     </div>
-                `).join('');
+                `}).join('');
         }
 
         function copyOrderLink(productId) {

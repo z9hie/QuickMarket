@@ -48,7 +48,7 @@
         .bot-detail-name { font-size: 26px; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
         .bot-detail-price { font-size: 24px; font-weight: 700; margin-bottom: 20px; }
         .bot-detail-description { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 24px; padding: 16px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; text-align: left; }
-        .btn-primary { width: 100%; padding: 16px; background: var(--accent); color: var(--accent-text); border: none; border-radius: 12px; font-size: 16px; font-weight: 700; text-align: center; text-decoration: none; display: block; transition: opacity 0.2s; }
+        .btn-primary { width: 100%; padding: 16px; background: var(--accent); color: var(--accent-text); border: none; border-radius: 12px; font-size: 16px; font-weight: 700; text-align: center; text-decoration: none; display: block; transition: opacity 0.2s; cursor: pointer; }
         .btn-primary:active { opacity: 0.8; }
         .btn-secondary { width: 100%; padding: 16px; background: transparent; border: 1px solid var(--border); border-radius: 12px; color: var(--text-primary); font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 12px; transition: background 0.2s; }
         .btn-secondary:active { background: var(--bg-secondary); }
@@ -109,7 +109,8 @@
                 <h1 class="bot-detail-name" id="detail-name"></h1>
                 <div class="bot-detail-price" id="detail-price"></div>
                 <div class="bot-detail-description" id="detail-description"></div>
-                <a href="https://t.me/z9hie" class="btn-primary" target="_blank">Купить</a>
+                <!-- КНОПКА ОПЛАТЫ С ЗАГЛУШКОЙ -->
+                <button class="btn-primary" onclick="showPaymentModal()">Оплатить</button>
                 <button class="btn-secondary" onclick="showPage('catalog')">← Назад в каталог</button>
             </div>
             <div class="footer">verplatega | create by <a href="https://t.me/z9hie">@z9hie</a></div>
@@ -167,7 +168,7 @@
             <div class="footer">verplatega | create by <a href="https://t.me/z9hie">@z9hie</a></div>
         </div>
 
-        <!-- ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ (Обновлено по шаблону) -->
+        <!-- ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ -->
         <div class="page" id="page-terms">
             <div class="page-content">
                 <h2 class="page-title">Пользовательское соглашение</h2>
@@ -188,7 +189,7 @@
             </div>
         </div>
 
-        <!-- ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ (Обновлена по шаблону) -->
+        <!-- ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ -->
         <div class="page" id="page-privacy">
             <div class="page-content">
                 <h2 class="page-title">Политика конфиденциальности</h2>
@@ -233,10 +234,20 @@
         <div class="modal-box">
             <h3>Поддержка</h3>
             <p>Есть вопросы? Напишите нам, мы поможем!</p>
-            <a href="https://t.me/qmarket_support" target="_blank">Написать в поддержку</a>
+            <a href="https://t.me/number811" target="_blank">Написать в поддержку</a>
             <button onclick="closeSupport()">Закрыть</button>
         </div>
     </div>
+
+    <!-- Модалка оплаты (ЗАГЛУШКА ДЛЯ БАНКА) -->
+    <div class="modal-overlay" id="payment-modal">
+        <div class="modal-box">
+            <h3>Оплата</h3>
+            <p id="payment-modal-text" style="text-align: left;"></p>
+            <button onclick="closePaymentModal()">Понятно</button>
+        </div>
+    </div>
+
     <div class="toast" id="toast"></div>
 
     <script>
@@ -244,7 +255,6 @@
         if (tg) { tg.expand(); tg.ready(); }
         const ADMIN_ID = 5640325235;
 
-        // ТОЛЬКО ГОТОВЫЕ БОТЫ (Услуги удалены по требованию банка)
         const products = [
             { id: 1, type: "bot", name: "Giveaway Bot", price: 490, image: "", description: "Автоматически проверяет подписку на канал, собирает участников и по таймеру выбирает случайного победителя." },
             { id: 2, type: "bot", name: "Anti-Spam / Welcome Bot", price: 990, image: "img/g.jpg", description: "Автоматически удаляет спам, ссылки и мат. Выдает приветственное сообщение новым участникам." },
@@ -329,6 +339,21 @@
             if (name === 'favorites') renderFavorites();
             window.scrollTo(0, 0);
         }
+
+        // Функции для модалки оплаты (заглушка для банка)
+        function showPaymentModal() {
+            const name = document.getElementById('detail-name').textContent;
+            const price = document.getElementById('detail-price').textContent;
+            const modalText = document.getElementById('payment-modal-text');
+            modalText.innerHTML = `Товар: <strong>${name}</strong><br>К оплате: <strong>${price}</strong><br><br>⚠️ В настоящее время идет финальная настройка платежной системы. Прием оплат картами и СБП будет открыт в ближайшие дни.`;
+            document.getElementById('payment-modal').classList.add('active');
+        }
+        function closePaymentModal() {
+            document.getElementById('payment-modal').classList.remove('active');
+        }
+        document.getElementById('payment-modal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('payment-modal')) closePaymentModal();
+        });
 
         document.querySelectorAll('.nav-item').forEach(item => item.addEventListener('click', () => showPage(item.dataset.page)));
         document.getElementById('search-input').addEventListener('input', renderProducts);

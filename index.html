@@ -109,7 +109,6 @@
                 <h1 class="bot-detail-name" id="detail-name"></h1>
                 <div class="bot-detail-price" id="detail-price"></div>
                 <div class="bot-detail-description" id="detail-description"></div>
-                <!-- КНОПКА ОПЛАТЫ С ЗАГЛУШКОЙ -->
                 <button class="btn-primary" onclick="showPaymentModal()">Оплатить</button>
                 <button class="btn-secondary" onclick="showPage('catalog')">← Назад в каталог</button>
             </div>
@@ -183,7 +182,7 @@
                     <p style="margin-bottom: 10px;"><strong>7. Платежи и возвраты</strong><br>7.1. Оплата услуг и цифровых товаров производится на условиях, указанных в Сервисе до момента оплаты.<br>7.2. В связи с нематериальным характером цифровых товаров и услуг, возврат денежных средств после предоставления доступа не осуществляется, за исключением случаев, указанных ниже.<br>7.3. Возврат средств возможен только если: услуга не была оказана по технической вине Сервиса; доступ к цифровому товару фактически не был предоставлен.<br>7.4. Для рассмотрения вопроса о возврате Пользователь обязан обратиться в службу поддержки в течение 24 часов с момента оплаты.<br>7.5. Решение о возврате принимается Администрацией индивидуально.<br>7.6. Пользователь подтверждает, что обязуется не инициировать возврат платежа (chargeback) через платёжные системы без предварительного обращения в службу поддержки Сервиса.</p>
                     <p style="margin-bottom: 10px;"><strong>8. Конфиденциальность</strong><br>8.1. Администрация может собирать минимально необходимые технические данные для обеспечения работы Сервиса.<br>8.2. Администрация принимает разумные меры для защиты данных, однако не гарантирует абсолютную безопасность передаваемой информации.</p>
                     <p style="margin-bottom: 10px;"><strong>9. Изменение условий</strong><br>9.1. Администрация вправе вносить изменения в настоящее Соглашение.<br>9.2. Актуальная версия Соглашения публикуется в Сервисе.<br>9.3. Продолжение использования Сервиса означает согласие Пользователя с обновлёнными условиями.</p>
-                    <p><strong>10. Контактная информация</strong><br>10.1. По всем вопросам Пользователь может обратиться в службу поддержки через форму в самом боте.<br><br>Используя Сервис (в том числе запуская бота и/или вводя команду /start), Пользователь подтверждает, что ознакомлен с настоящим Соглашением и принимает его условия в полном объёме.</p>
+                    <p><strong>10. Контактная информация</strong><br>10.1. По всем вопросам Пользователь может обратиться в службу поддержки: <strong>@qmarket_support</strong><br><br>Используя Сервис (в том числе запуская бота и/или вводя команду /start), Пользователь подтверждает, что ознакомлен с настоящим Соглашением и принимает его условия в полном объёме.</p>
                 </div>
                 <button class="btn-secondary" onclick="showPage('profile')">← Назад в профиль</button>
             </div>
@@ -229,12 +228,11 @@
         </nav>
     </div>
 
-    <!-- Модалка поддержки -->
+    <!-- Модалка поддержки (ОБНОВЛЕНА: без кнопки-ссылки) -->
     <div class="modal-overlay" id="support-modal">
         <div class="modal-box">
             <h3>Поддержка</h3>
-            <p>Есть вопросы? Напишите нам, мы поможем!</p>
-            <a href="https://t.me/qmarket_support" target="_blank">Написать в поддержку</a>
+            <p>Есть какие-то проблемы?<br>Пишите <strong>@qmarket_support</strong></p>
             <button onclick="closeSupport()">Закрыть</button>
         </div>
     </div>
@@ -340,7 +338,7 @@
             window.scrollTo(0, 0);
         }
 
-        // Функции для модалки оплаты (заглушка для банка)
+        // Модалка оплаты
         function showPaymentModal() {
             const name = document.getElementById('detail-name').textContent;
             const price = document.getElementById('detail-price').textContent;
@@ -355,11 +353,15 @@
             if (e.target === document.getElementById('payment-modal')) closePaymentModal();
         });
 
-        document.querySelectorAll('.nav-item').forEach(item => item.addEventListener('click', () => showPage(item.dataset.page)));
-        document.getElementById('search-input').addEventListener('input', renderProducts);
+        // Модалка поддержки (ОБНОВЛЕНА)
         function openSupport() { document.getElementById('support-modal').classList.add('active'); }
         function closeSupport() { document.getElementById('support-modal').classList.remove('active'); }
-        document.getElementById('support-modal').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeSupport(); });
+        document.getElementById('support-modal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('support-modal')) closeSupport();
+        });
+
+        document.querySelectorAll('.nav-item').forEach(item => item.addEventListener('click', () => showPage(item.dataset.page)));
+        document.getElementById('search-input').addEventListener('input', renderProducts);
 
         document.getElementById('profile-name').textContent = user.first_name || 'Пользователь';
         document.getElementById('profile-username').textContent = '@' + (user.username || 'user');

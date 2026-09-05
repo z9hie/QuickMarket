@@ -26,18 +26,24 @@
         .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 16px 20px; }
         .product-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; cursor: pointer; transition: transform 0.2s, border-color 0.2s; position: relative; display: flex; flex-direction: column; }
         .product-card:active { transform: scale(0.97); border-color: var(--text-secondary); }
+        .product-card.unavailable { opacity: 0.5; pointer-events: none; }
+        .product-image { width: 100%; aspect-ratio: 16/10; object-fit: cover; background: var(--bg-tertiary); border-bottom: 1px solid var(--border); }
         .product-image-placeholder { width: 100%; aspect-ratio: 16/10; background: var(--bg-tertiary); display: flex; align-items: center; justify-content: center; border-bottom: 1px solid var(--border); }
         .product-image-placeholder svg { width: 32px; height: 32px; stroke: var(--text-secondary); fill: none; stroke-width: 1.5; }
+        .product-fav { position: absolute; top: 8px; right: 8px; background: rgba(9, 9, 11, 0.6); backdrop-filter: blur(4px); border: 1px solid var(--border); border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 2; transition: transform 0.2s; }
+        .product-fav:active { transform: scale(1.2); }
+        .product-fav svg { width: 16px; height: 16px; stroke: var(--text-primary); fill: none; stroke-width: 2; transition: all 0.2s; }
+        .product-fav.active svg { stroke: #ef4444; fill: #ef4444; }
         .product-info { padding: 12px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
         .product-type { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); margin-bottom: 4px; }
-        .product-name { font-size: 14px; font-weight: 600; line-height: 1.3; margin-bottom: 8px; }
+        .product-name { font-size: 14px; font-weight: 600; line-height: 1.3; margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .product-price { font-size: 16px; font-weight: 700; color: var(--text-primary); }
         .empty-state { text-align: center; padding: 60px 20px; color: var(--text-secondary); grid-column: 1 / -1; }
         .page { display: none; flex-direction: column; flex: 1; padding-bottom: 80px; }
         .page.active { display: flex; }
         .page-content { padding: 0 20px; flex: 1; }
         .page-title { font-size: 28px; font-weight: 800; margin: 20px 0 16px; letter-spacing: -0.5px; }
-        .bot-detail-image { width: 100%; max-width: 480px; aspect-ratio: 16/9; object-fit: cover; background: var(--bg-tertiary); margin: 0 auto; display: none; }
+        .bot-detail-image { width: 100%; max-width: 480px; aspect-ratio: 16/9; object-fit: cover; background: var(--bg-tertiary); margin: 0 auto; }
         .bot-detail-content { padding: 24px 20px; }
         .bot-detail-type { font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 8px; }
         .bot-detail-name { font-size: 26px; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
@@ -57,12 +63,15 @@
         .stat-item:last-child { border-bottom: none; }
         .stat-label { font-size: 15px; font-weight: 500; }
         .stat-arrow { color: var(--text-secondary); font-size: 18px; }
-        .orders-list { display: flex; flex-direction: column; gap: 12px; }
+        .orders-list, .favorites-grid { display: flex; flex-direction: column; gap: 12px; }
+        .favorites-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
         .order-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; padding: 16px; }
         .order-name { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
         .order-price { font-size: 14px; color: var(--text-secondary); margin-bottom: 12px; }
         .order-status { display: inline-block; padding: 4px 10px; background: rgba(34, 197, 94, 0.15); color: #22c55e; border-radius: 6px; font-size: 12px; font-weight: 600; }
         .order-date { font-size: 12px; color: var(--text-secondary); margin-top: 8px; }
+        .download-btn { display: inline-block; margin-top: 10px; padding: 8px 12px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); text-decoration: none; font-size: 12px; font-weight: 600; transition: background 0.2s; }
+        .download-btn:active { background: var(--bg-secondary); }
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(9, 9, 11, 0.9); backdrop-filter: blur(20px); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 8px 0 max(8px, env(safe-area-inset-bottom)); z-index: 100; max-width: 480px; margin: 0 auto; }
         .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; padding: 8px 16px; flex: 1; }
         .nav-item svg { width: 24px; height: 24px; stroke: var(--text-secondary); fill: none; stroke-width: 1.8; transition: stroke 0.2s; }
@@ -74,6 +83,7 @@
         .modal-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 20px; padding: 24px; max-width: 340px; width: 100%; text-align: center; }
         .modal-box h3 { font-size: 18px; margin-bottom: 8px; }
         .modal-box p { color: var(--text-secondary); font-size: 14px; margin-bottom: 20px; line-height: 1.5; }
+        .modal-box a { display: block; padding: 14px; background: var(--accent); border-radius: 12px; color: var(--accent-text); font-weight: 700; text-decoration: none; margin-bottom: 10px; }
         .modal-box button { width: 100%; padding: 14px; background: transparent; border: 1px solid var(--border); border-radius: 12px; color: var(--text-primary); font-size: 15px; cursor: pointer; margin-top: 8px; }
         .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 12px; padding: 12px 20px; color: var(--text-primary); font-size: 14px; font-weight: 500; z-index: 300; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); white-space: nowrap; }
         .toast.show { transform: translateX(-50%) translateY(0); }
@@ -88,23 +98,33 @@
         <!-- КАТАЛОГ -->
         <div class="page active" id="page-catalog">
             <div class="controls">
-                <div class="search-bar"><input type="text" placeholder="Поиск..." id="search-input"></div>
+                <div class="search-bar"><input type="text" placeholder="Поиск ботов..." id="search-input"></div>
             </div>
             <div class="products-grid" id="products-grid"></div>
-            <div class="footer">test mode | create by <a href="https://t.me/z9hie">@z9hie</a></div>
+            <div class="footer">ver platega | create by <a href="https://t.me/z9hie">@z9hie</a></div>
         </div>
 
         <!-- ДЕТАЛИ ТОВАРА -->
         <div class="page" id="page-detail">
+            <img class="bot-detail-image" id="detail-image" src="" alt="Product" onerror="this.style.display='none'">
             <div class="bot-detail-content">
-                <div class="bot-detail-type" id="detail-type">🧪 ТЕСТОВЫЙ ТОВАР</div>
-                <h1 class="bot-detail-name" id="detail-name"></h1>
+                <div class="bot-detail-type" id="detail-type">🤖 Telegram Бот</div>
+                <h1 class="bot-detail-name" id="detail-name" data-id=""></h1>
                 <div class="bot-detail-price" id="detail-price"></div>
                 <div class="bot-detail-description" id="detail-description"></div>
-                <button class="btn-primary" id="buy-btn" onclick="showPaymentModal()">Оплатить 10 ₽</button>
+                <button class="btn-primary" id="buy-btn" onclick="showPaymentModal()">Оплатить</button>
                 <button class="btn-secondary" onclick="showPage('catalog')">← Назад в каталог</button>
             </div>
-            <div class="footer">test mode | create by <a href="https://t.me/z9hie">@z9hie</a></div>
+            <div class="footer">ver platega | create by <a href="https://t.me/z9hie">@z9hie</a></div>
+        </div>
+
+        <!-- ИЗБРАННОЕ -->
+        <div class="page" id="page-favorites">
+            <div class="page-content">
+                <h2 class="page-title">Избранное</h2>
+                <div class="favorites-grid" id="favorites-grid"></div>
+            </div>
+            <div class="footer">ver platega | create by <a href="https://t.me/z9hie">@z9hie</a></div>
         </div>
 
         <!-- ЗАКАЗЫ -->
@@ -113,7 +133,7 @@
                 <h2 class="page-title">Мои заказы</h2>
                 <div class="orders-list" id="orders-list"></div>
             </div>
-            <div class="footer">test mode | create by <a href="https://t.me/z9hie">@z9hie</a></div>
+            <div class="footer">ver platega | create by <a href="https://t.me/z9hie">@z9hie</a></div>
         </div>
 
         <!-- ПРОФИЛЬ -->
@@ -125,6 +145,18 @@
                     <p class="username" id="profile-username">@user</p>
                 </div>
                 <div class="profile-stats">
+                    <div class="stat-item" onclick="showPage('terms')">
+                        <span class="stat-label">📄 Пользовательское соглашение</span>
+                        <span class="stat-arrow">›</span>
+                    </div>
+                    <div class="stat-item" onclick="showPage('privacy')">
+                        <span class="stat-label">🔒 Политика конфиденциальности</span>
+                        <span class="stat-arrow">›</span>
+                    </div>
+                    <div class="stat-item" onclick="showPage('favorites')">
+                        <span class="stat-label">Избранное</span>
+                        <span class="stat-arrow">›</span>
+                    </div>
                     <div class="stat-item" onclick="showPage('orders')">
                         <span class="stat-label">Мои заказы</span>
                         <span class="stat-arrow">›</span>
@@ -135,7 +167,32 @@
                     </div>
                 </div>
             </div>
-            <div class="footer">test mode | create by <a href="https://t.me/z9hie">@z9hie</a></div>
+            <div class="footer">ver platega | create by <a href="https://t.me/z9hie">@z9hie</a></div>
+        </div>
+
+        <!-- ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ -->
+        <div class="page" id="page-terms">
+            <div class="page-content">
+                <h2 class="page-title">Пользовательское соглашение</h2>
+                <div class="bot-detail-description">
+                    <p style="margin-bottom: 10px;"><strong>1. Общие положения</strong><br>Используя Сервис QuickMarket, Пользователь принимает условия данного Соглашения в полном объёме.</p>
+                    <p style="margin-bottom: 10px;"><strong>2. Характер услуг</strong><br>Сервис предоставляет цифровые товары нематериального характера (скрипты, боты, исходный код).</p>
+                    <p style="margin-bottom: 10px;"><strong>3. Возврат средств</strong><br>В связи с цифровым характером товаров, возврат средств после получения доступа к файлам не осуществляется.</p>
+                    <p><strong>4. Поддержка</strong><br>По всем вопросам: <strong>@qmarket_support</strong></p>
+                </div>
+                <button class="btn-secondary" onclick="showPage('profile')">← Назад в профиль</button>
+            </div>
+        </div>
+
+        <!-- ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ -->
+        <div class="page" id="page-privacy">
+            <div class="page-content">
+                <h2 class="page-title">Политика конфиденциальности</h2>
+                <div class="bot-detail-description">
+                    <p style="margin-bottom: 10px;">Мы собираем минимально необходимые данные (ID Telegram, username) исключительно для функционирования магазина и выдачи купленных товаров. Данные не передаются третьим лицам.</p>
+                </div>
+                <button class="btn-secondary" onclick="showPage('profile')">← Назад в профиль</button>
+            </div>
         </div>
 
         <!-- НАВИГАЦИЯ -->
@@ -143,6 +200,10 @@
             <div class="nav-item active" data-page="catalog">
                 <svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><polyline points="9 21 9 14 15 14 15 21"/></svg>
                 <span>Главная</span>
+            </div>
+            <div class="nav-item" data-page="favorites">
+                <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                <span>Избранное</span>
             </div>
             <div class="nav-item" data-page="orders">
                 <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
@@ -178,12 +239,22 @@
     <script>
         const tg = window.Telegram?.WebApp;
         if (tg) { tg.expand(); tg.ready(); }
+        
+        // ⚠️ ЗАМЕНИ ЭТУ ССЫЛКУ НА СВОЙ РЕАЛЬНЫЙ RAW-ПУТЬ К ФАЙЛАМ НА GITHUB
+        // Пример: https://raw.githubusercontent.com/z9hie/quickmarket-files/main/
+        const GITHUB_FILES_URL = "https://raw.githubusercontent.com/z9hie/quickmarket-files/main/";
 
-        // Оставляем только один тестовый товар
         const products = [
-            { id: 1, type: "test", name: "Тестовый товар", price: 10, description: "Это тестовый режим работы маркетплейса. При нажатии 'Оплатить' будет имитация успешного платежа на 10₽ с выдачей кода.", available: true }
+            { id: 1, type: "bot", name: "Бот Автопост", price: 990, image: "", description: "Автоматический постинг в каналы. Поддержка отложенных публикаций, цветных кнопок, медиа и шаблонов.", file: "autopost_bot.zip" },
+            { id: 2, type: "bot", name: "Бот Спамблок", price: 499, image: "", description: "Надёжная защита чата от спама, ссылок и мата. Приветствие новых участников и простая капча.", file: "spam_block_bot.py" },
+            { id: 3, type: "bot", name: "Бот для онлайн-записи", price: 990, image: "", description: "Удобная запись клиентов на услуги. Выбор даты, времени и мгновенная отправка заявки админу.", file: "booking_bot.zip" },
+            { id: 4, type: "bot", name: "Бот Парсер", price: 1290, image: "", description: "Сбор данных из указанных чатов или каналов по ключевым словам. Экспорт результатов в Excel/CSV.", file: "parser_bot.zip" },
+            { id: 5, type: "bot", name: "WebApp бот (Магазин)", price: 2490, image: "", description: "Полноценный магазин внутри Telegram с каталогом, корзиной, избранным и интеграцией платежей.", file: "webapp_shop_bot.zip" },
+            { id: 6, type: "bot", name: "Автовыдача товаров", price: 1290, image: "", description: "Мгновенная автоматическая выдача цифровых товаров (файлы, ключи, ссылки) после успешной оплаты.", file: "autodelivery_bot.zip" },
+            { id: 7, type: "custom", name: "Кастомный бот под ТЗ", price: 2990, image: "", description: "Индивидуальная разработка бота любой сложности под ваши уникальные бизнес-задачи.", file: null, available: false }
         ];
 
+        let favorites = JSON.parse(localStorage.getItem('qm_fav') || '[]');
         let orders = JSON.parse(localStorage.getItem('qm_orders') || '[]');
         const user = tg?.initDataUnsafe?.user || { first_name: 'Гость', username: 'guest', id: 0 };
         let currentProductId = null;
@@ -193,32 +264,71 @@
             t.textContent = msg; t.classList.add('show');
             setTimeout(() => t.classList.remove('show'), 2000);
         }
+        function saveFav() { localStorage.setItem('qm_fav', JSON.stringify(favorites)); }
         function saveOrders() { localStorage.setItem('qm_orders', JSON.stringify(orders)); }
+
+        function toggleFav(id) {
+            const i = favorites.indexOf(id);
+            if (i > -1) { favorites.splice(i, 1); showToast('Удалено из избранного'); } 
+            else { favorites.push(id); showToast('Добавлено в избранное'); }
+            saveFav(); renderProducts(); renderFavorites();
+        }
 
         function renderProducts() {
             const grid = document.getElementById('products-grid');
             const search = document.getElementById('search-input').value.toLowerCase();
             const filtered = products.filter(p => p.name.toLowerCase().includes(search));
+            if (filtered.length === 0) { grid.innerHTML = '<div class="empty-state"><p>Ничего не найдено</p></div>'; return; }
             
             grid.innerHTML = filtered.map(p => {
-                return `<div class="product-card" onclick="showDetail(${p.id})">
-                    <div class="product-image-placeholder"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M12 8V4"/><circle cx="12" cy="3" r="1"/></svg></div>
+                const isFav = favorites.includes(p.id);
+                const unavailableClass = p.available === false ? 'unavailable' : '';
+                const typeLabel = p.type === 'custom' ? '🛠 ИНДИВИДУАЛЬНО' : '🤖 ГОТОВЫЙ БОТ';
+                const imageHtml = p.image ? `<img src="${p.image}" class="product-image" alt="${p.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"><div class="product-image-placeholder" style="display:none"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M12 8V4"/><circle cx="12" cy="3" r="1"/></svg></div>` : `<div class="product-image-placeholder"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M12 8V4"/><circle cx="12" cy="3" r="1"/></svg></div>`;
+                
+                return `<div class="product-card ${unavailableClass}" onclick="showDetail(${p.id})">
+                    <button class="product-fav ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFav(${p.id})"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+                    ${imageHtml}
                     <div class="product-info">
-                        <div><div class="product-type">🧪 ТЕСТ</div><div class="product-name">${p.name}</div></div>
-                        <div class="product-price">${p.price} ₽</div>
+                        <div><div class="product-type">${typeLabel}</div><div class="product-name">${p.name}</div></div>
+                        <div class="product-price">${p.available === false ? 'По запросу' : p.price + ' ₽'}</div>
                     </div>
                 </div>`;
             }).join('');
+        }
+
+        function renderFavorites() {
+            const grid = document.getElementById('favorites-grid');
+            const favProducts = products.filter(p => favorites.includes(p.id));
+            if (favProducts.length === 0) { grid.innerHTML = '<div class="empty-state"><p>Список пуст</p></div>'; return; }
+            grid.innerHTML = favProducts.map(p => `<div class="product-card" onclick="showDetail(${p.id})">
+                <button class="product-fav active" onclick="event.stopPropagation(); toggleFav(${p.id})"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+                <div class="product-info"><div class="product-name">${p.name}</div><div class="product-price">${p.price} ₽</div></div>
+            </div>`).join('');
         }
 
         function showDetail(id) {
             currentProductId = id;
             const p = products.find(x => x.id === id); if (!p) return;
             
-            document.getElementById('detail-type').textContent = '🧪 ТЕСТОВЫЙ ТОВАР';
+            const imgEl = document.getElementById('detail-image');
+            if (p.image) { imgEl.src = p.image; imgEl.style.display = 'block'; imgEl.onerror = function() { this.style.display = 'none'; }; } 
+            else { imgEl.style.display = 'none'; }
+            
+            document.getElementById('detail-type').textContent = p.type === 'custom' ? '🛠 ИНДИВИДУАЛЬНАЯ РАЗРАБОТКА' : '🤖 ГОТОВЫЙ TELEGRAM БОТ';
             document.getElementById('detail-name').textContent = p.name;
-            document.getElementById('detail-price').textContent = `${p.price} ₽`;
-            document.getElementById('detail-description').textContent = p.description;
+            document.getElementById('detail-name').dataset.id = p.id;
+            document.getElementById('detail-price').textContent = p.available === false ? 'Цена по договорённости' : `${p.price} ₽`;
+            document.getElementById('detail-description').textContent = p.description || 'Описание отсутствует';
+            
+            const buyBtn = document.getElementById('buy-btn');
+            if (p.available === false) {
+                buyBtn.textContent = 'Связаться для заказа';
+                buyBtn.onclick = () => { tg.openTelegramLink('https://t.me/qmarket_support'); };
+            } else {
+                buyBtn.textContent = 'Оплатить';
+                buyBtn.onclick = showPaymentModal;
+            }
             
             showPage('detail');
         }
@@ -230,11 +340,14 @@
             
             list.innerHTML = userOrders.map(o => {
                 const p = products.find(x => x.id === o.productId); if (!p) return '';
+                const downloadBtn = o.fileName ? 
+                    `<a href="${GITHUB_FILES_URL}${o.fileName}" target="_blank" class="download-btn">📥 Скачать ${o.fileName}</a>` : '';
+                
                 return `<div class="order-card">
                     <div class="order-name">${p.name}</div>
                     <div class="order-price">${p.price} ₽</div>
                     <span class="order-status">${o.status}</span>
-                    <div style="margin-top: 10px; padding: 10px; background: var(--bg-tertiary); border-radius: 8px; text-align: center; font-weight: 700; font-size: 18px; letter-spacing: 2px;">${o.fileName}</div>
+                    ${downloadBtn}
                     <div class="order-date">${o.date}</div>
                 </div>`;
             }).join('');
@@ -247,101 +360,95 @@
             const navItem = document.querySelector(`.nav-item[data-page="${name}"]`);
             if (navItem) navItem.classList.add('active');
             if (name === 'orders') renderOrders();
+            if (name === 'favorites') renderFavorites();
             window.scrollTo(0, 0);
         }
 
-        // === ПРОСТАЯ ТЕСТОВАЯ ОПЛАТА (БЕЗ СЕРВЕРА) ===
+        // === ЛОГИКА ОПЛАТЫ И ВЫДАЧИ ФАЙЛОВ ===
         async function showPaymentModal() {
             const p = products.find(x => x.id === currentProductId);
-            if (!p) return;
+            if (!p || !p.available) return;
 
             const modal = document.getElementById('payment-modal');
             const title = document.getElementById('payment-modal-title');
             const text = document.getElementById('payment-modal-text');
             const actions = document.getElementById('payment-modal-actions');
             
-            title.textContent = 'Выберите способ оплаты';
-            text.innerHTML = `
-                <p style="margin-bottom: 15px;">Товар: <strong>${p.name}</strong><br>К оплате: <strong>10 ₽</strong></p>
-                <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; text-align: left;">
-                    <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg-tertiary); border-radius: 10px; border: 1px solid var(--border);">
-                        <span style="font-size: 20px;">💳</span>
-                        <div>
-                            <div style="font-weight: 600; font-size: 14px;">Банковские карты</div>
-                            <div style="font-size: 12px; color: var(--text-secondary);">Visa, Mastercard, МИР</div>
-                        </div>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg-tertiary); border-radius: 10px; border: 1px solid var(--border);">
-                        <span style="font-size: 20px;">⚡️</span>
-                        <div>
-                            <div style="font-weight: 600; font-size: 14px;">СБП</div>
-                            <div style="font-size: 12px; color: var(--text-secondary);">Система быстрых платежей</div>
-                        </div>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg-tertiary); border-radius: 10px; border: 1px solid var(--border);">
-                        <span style="font-size: 20px;">💎</span>
-                        <div>
-                            <div style="font-weight: 600; font-size: 14px;">Криптовалюта</div>
-                            <div style="font-size: 12px; color: var(--text-secondary);">USDT, TON, BTC</div>
-                        </div>
-                    </div>
-                </div>
-                <p style="font-size: 12px; color: var(--text-secondary); text-align: center;">⚠️ Это тестовый режим. Реальные деньги не списываются.</p>
-            `;
-            actions.innerHTML = `
-                <button id="btn-pay-now" style="background: var(--accent); color: var(--accent-text); font-weight: 700; border: none; padding: 14px; border-radius: 12px; width: 100%; cursor: pointer;">
-                    Оплатить 10 ₽
-                </button>
-                <button onclick="closePaymentModal()" style="background: transparent; border: 1px solid var(--border); color: var(--text-primary); padding: 14px; border-radius: 12px; width: 100%; margin-top: 8px; cursor: pointer;">
-                    Отмена
-                </button>
-            `;
+            title.textContent = 'Создание платежа';
+            text.innerHTML = `⏳ Создаём защищённый платёж для <strong>${p.name}</strong>...`;
+            actions.innerHTML = '';
             modal.classList.add('active');
 
-            // Имитация процесса оплаты
-            document.getElementById('btn-pay-now').onclick = async () => {
-                const btn = document.getElementById('btn-pay-now');
-                btn.textContent = 'Обработка платежа...';
-                btn.disabled = true;
-                btn.style.opacity = '0.7';
+            try {
+                const SERVER_URL = "https://z9hie.pythonanywhere.com";
+                const response = await fetch(`${SERVER_URL}/create-payment`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        amount: p.price * 100,
+                        description: `Покупка: ${p.name}`,
+                        order_id: `order_${Date.now()}_${p.id}`
+                    })
+                });
+                const data = await response.json();
 
-                // Ждем 1.5 секунды для реалистичности
-                await new Promise(resolve => setTimeout(resolve, 1500));
-
-                // Показываем успешный результат
-                title.textContent = 'Оплата успешна! 🎉';
-                text.innerHTML = `
-                    <p style="color: #22c55e; font-weight: 700; font-size: 16px; margin-bottom: 10px;">Платёж на 10 ₽ прошёл!</p>
-                    <p style="margin-bottom: 10px;">Ваш код доступа:</p>
-                    <div style="background: var(--bg-tertiary); border: 2px dashed var(--text-secondary); padding: 16px; border-radius: 12px; margin: 15px 0;">
-                        <span style="font-size: 36px; font-weight: 800; letter-spacing: 4px; color: var(--accent);">1</span>
-                    </div>
-                    <p style="font-size: 12px; color: var(--text-secondary);">Сохраните этот код. Он также добавлен в "Мои заказы".</p>
-                `;
-                actions.innerHTML = `
-                    <button onclick="finishTestPayment(${p.id})" style="background: var(--accent); color: var(--accent-text); font-weight: 700; border: none; padding: 14px; border-radius: 12px; width: 100%; cursor: pointer;">
-                        Отлично, в заказы
-                    </button>
-                `;
-            };
+                if (data.paymentUrl) {
+                    window.open(data.paymentUrl, '_blank');
+                    
+                    title.textContent = 'Ожидание оплаты';
+                    text.innerHTML = `
+                        <p>Товар: <strong>${p.name}</strong></p>
+                        <p>К оплате: <strong>${p.price} ₽</strong></p>
+                        <p style="font-size:12px; color:var(--text-secondary); margin-top:10px;">
+                            1. Оплатите в открывшейся вкладке.<br>
+                            2. Вернитесь сюда и нажмите кнопку ниже.
+                        </p>
+                    `;
+                    actions.innerHTML = `
+                        <button onclick="confirmPayment(${p.id})" style="background: var(--accent); color: var(--accent-text); font-weight: 700; border: none;">✅ Я оплатил (Получить файл)</button>
+                        <button onclick="closePaymentModal()" style="background: transparent; border: 1px solid var(--border);">Отмена</button>
+                    `;
+                } else {
+                    title.textContent = 'Ошибка';
+                    text.innerHTML = `❌ Не удалось создать платёж: ${data.error || 'Неизвестная ошибка'}`;
+                    actions.innerHTML = `<button onclick="closePaymentModal()">Закрыть</button>`;
+                }
+            } catch (error) {
+                title.textContent = 'Ошибка сети';
+                text.innerHTML = `⚠️ Не удалось соединиться с сервером оплаты.`;
+                actions.innerHTML = `<button onclick="closePaymentModal()">Закрыть</button>`;
+                console.error(error);
+            }
         }
 
-        function finishTestPayment(productId) {
+        function confirmPayment(productId) {
             const p = products.find(x => x.id === productId);
             
-            // Сохраняем в localStorage
-            orders.push({
+            // Сохраняем заказ в локальную базу
+            const newOrder = {
                 userId: user.id,
                 productId: p.id,
                 date: new Date().toLocaleDateString('ru-RU'),
-                fileName: "Код: 1",
-                status: 'Выдан'
-            });
+                fileName: p.file,
+                status: 'Доставлен'
+            };
+            orders.push(newOrder);
             saveOrders();
             
-            closePaymentModal();
-            showPage('orders');
-            showToast('✅ Заказ сохранён!');
+            const title = document.getElementById('payment-modal-title');
+            const text = document.getElementById('payment-modal-text');
+            const actions = document.getElementById('payment-modal-actions');
+            
+            title.textContent = 'Успешно! 🎉';
+            text.innerHTML = `
+                <p style="color: #22c55e; font-weight: 700; font-size: 16px; margin-bottom: 10px;">Оплата подтверждена!</p>
+                <p>Ваш файл готов к скачиванию:</p>
+                <a href="${GITHUB_FILES_URL}${p.file}" target="_blank" style="display: block; padding: 14px; background: var(--accent); color: var(--accent-text); border-radius: 12px; font-weight: 700; text-decoration: none; margin: 15px 0;">
+                    📥 Скачать ${p.file}
+                </a>
+                <p style="font-size: 12px; color: var(--text-secondary);">Файл также сохранён в разделе "Мои заказы"</p>
+            `;
+            actions.innerHTML = `<button onclick="closePaymentModal(); showPage('orders');" style="background: transparent; border: 1px solid var(--border);">Перейти к заказам</button>`;
         }
 
         function closePaymentModal() {

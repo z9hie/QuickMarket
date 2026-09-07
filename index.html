@@ -82,7 +82,11 @@
         .order-card:active { background: var(--bg-tertiary); }
         .order-name { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
         .order-price { font-size: 14px; color: var(--text-secondary); margin-bottom: 12px; }
-        .order-status { display: inline-block; padding: 4px 10px; background: rgba(34, 197, 94, 0.15); color: #22c55e; border-radius: 6px; font-size: 12px; font-weight: 600; }
+        .order-status { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; }
+        .order-status.status-waiting { background: rgba(234, 179, 8, 0.15); color: #eab308; }
+        .order-status.status-completed { background: rgba(34, 197, 94, 0.15); color: #22c55e; }
+        .order-status.status-cancelled { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+        .order-status.status-refunded { background: rgba(168, 85, 247, 0.15); color: #a855f7; }
         .order-date { font-size: 12px; color: var(--text-secondary); margin-top: 8px; }
         .download-btn { display: inline-block; margin-top: 10px; padding: 8px 12px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); text-decoration: none; font-size: 12px; font-weight: 600; transition: background 0.2s; }
         .download-btn:active { background: var(--bg-secondary); }
@@ -369,6 +373,29 @@
         let currentProductId = null;
         let lastOrderId = null;
 
+        // ========== СИСТЕМА ЗАКАЗОВ ==========
+        function createOrder(p, orderId) {
+            return {
+                userId: user.id,
+                productId: p.id,
+                date: new Date().toLocaleDateString('ru-RU'),
+                fileName: p.file || null,
+                status: 'waiting',
+                testCode: p.testCode || null,
+                orderId: orderId,
+                createdAt: Date.now()
+            };
+        }
+
+        function updateOrderStatus(orderId, newStatus) {
+            const order = orders.find(o => o.orderId === orderId);
+            if (order) {
+                order.status = newStatus;
+                saveOrders();
+                renderOrders();
+            }
+        }
+
         function showToast(msg) {
             const t = document.getElementById('toast');
             t.textContent = msg; t.classList.add('show');
@@ -460,17 +487,45 @@
             list.innerHTML = userOrders.map(o => {
                 const p = products.find(x => x.id === o.productId); if (!p) return '';
                 
+                let statusHtml = '';
+                let statusClass = '';
+                switch(o.status) {
+                    case 'waiting':
+                        statusHtml = '🕐 Ожидание';
+                        statusClass = 'status-waiting';
+                        break;
+                    case 'completed':
+                        statusHtml = '✅ Выполнен';
+                        statusClass = 'status-completed';
+                        break;
+                    case 'cancelled':
+                        statusHtml = '❌ Отменён';
+                        statusClass = 'status-cancelled';
+                        break;
+                    case 'refunded':
+                        statusHtml = '🔄 Возврат';
+                        statusClass = 'status-refunded';
+                        break;
+                    default:
+                        statusHtml = o.status;
+                        statusClass = '';
+                }
+                
                 let contentHtml = '';
-                if (p.testCode) {
-                    contentHtml = `<div class="order-code" onclick="copyCode(this)">${p.testCode}</div>`;
-                } else if (o.fileName) {
-                    contentHtml = `<a href="${GITHUB_FILES_URL}${o.fileName}" target="_blank" class="download-btn">📥 Скачать ${o.fileName}</a>`;
+                if (o.status === 'completed') {
+                    if (p.testCode) {
+                        contentHtml = `<div class="order-code" onclick="copyCode(this)">${p.testCode}</div>`;
+                    } else if (o.fileName) {
+                        contentHtml = `<a href="${GITHUB_FILES_URL}${o.fileName}" target="_blank" class="download-btn">📥 Скачать ${o.fileName}</a>`;
+                    }
+                } else if (o.status === 'waiting') {
+                    contentHtml = `<div style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">Ожидаем подтверждение оплаты...</div>`;
                 }
                 
                 return `<div class="order-card">
                     <div class="order-name">${p.name}</div>
                     <div class="order-price">${p.price} ₽</div>
-                    <span class="order-status">${o.status}</span>
+                    <span class="order-status ${statusClass}">${statusHtml}</span>
                     ${contentHtml}
                     <div class="order-date">${o.date}</div>
                 </div>`;
@@ -497,6 +552,7 @@
             window.scrollTo(0, 0);
         }
 
+        // ========== ОПЛАТА ==========
         async function showPaymentModal() {
             const p = products.find(x => x.id === currentProductId);
             if (!p || p.available === false) return;
@@ -507,13 +563,23 @@
             const actions = document.getElementById('payment-modal-actions');
             
             title.textContent = 'Создание платежа';
-            text.innerHTML = `⏳ Создаём защищённый платёж для <strong>${p.name}</strong>...`;
+            text.innerHTML = `
+                <div style="text-align: center; padding: 20px 0;">
+                    <div style="font-size: 40px; margin-bottom: 16px;">⏳</div>
+                    <p>Создаём защищённый платёж...</p>
+                </div>
+            `;
             actions.innerHTML = '';
             modal.classList.add('active');
 
             try {
-                const orderId = `order_${Date.now()}_${p.id}`;
+                const orderId = `order_${Date.now()}_${p.id}_${user.id}`;
                 lastOrderId = orderId;
+                
+                // Создаём заказ со статусом "waiting"
+                const newOrder = createOrder(p, orderId);
+                orders.push(newOrder);
+                saveOrders();
                 
                 const response = await fetch(`${SERVER_URL}/create-payment`, {
                     method: 'POST',
@@ -533,81 +599,103 @@
                     
                     title.textContent = 'Ожидание оплаты';
                     text.innerHTML = `
-                        <p>Товар: <strong>${p.name}</strong></p>
-                        <p>К оплате: <strong>${p.price} ₽</strong></p>
-                        <p style="font-size:12px; color:var(--text-secondary); margin-top:10px;">
-                            1. Оплатите в открывшейся вкладке.<br>
-                            2. Вернитесь сюда и нажмите кнопку ниже.
-                        </p>
+                        <div style="text-align: center; padding: 20px 0;">
+                            <div style="font-size: 40px; margin-bottom: 16px;">💳</div>
+                            <p style="font-weight: 700; font-size: 18px; margin-bottom: 8px;">${p.name}</p>
+                            <p style="font-size: 24px; font-weight: 800; margin-bottom: 16px;">${p.price} ₽</p>
+                            <div style="background: var(--bg-tertiary); border-radius: 12px; padding: 16px;">
+                                <p style="font-size: 13px; color: var(--text-secondary); margin: 0;">
+                                    Ожидаем подтверждение оплаты...
+                                </p>
+                            </div>
+                        </div>
                     `;
-                    actions.innerHTML = `
-                        <button onclick="confirmPayment(${p.id})" style="background: var(--accent); color: var(--accent-text); font-weight: 700; border: none;">✅ Я оплатил (Получить)</button>
-                        <button onclick="closePaymentModal()" style="background: transparent; border: 1px solid var(--border);">Отмена</button>
-                    `;
+                    actions.innerHTML = `<button onclick="closePaymentModal()" style="background: transparent; border: 1px solid var(--border);">Закрыть</button>`;
+                    
+                    // Запускаем автопроверку
+                    startPaymentCheck(p, orderId);
                 } else {
+                    updateOrderStatus(orderId, 'cancelled');
                     title.textContent = 'Ошибка';
-                    text.innerHTML = `❌ Не удалось создать платёж: ${data.error || 'Неизвестная ошибка'}`;
+                    text.innerHTML = `<p style="text-align: center;">❌ Не удалось создать платёж.</p>`;
                     actions.innerHTML = `<button onclick="closePaymentModal()">Закрыть</button>`;
                 }
             } catch (error) {
-                title.textContent = 'Ошибка сети';
-                text.innerHTML = `⚠️ Не удалось соединиться с сервером оплаты.`;
+                updateOrderStatus(lastOrderId, 'cancelled');
+                title.textContent = 'Ошибка';
+                text.innerHTML = `<p style="text-align: center;">⚠️ Не удалось создать платёж.</p>`;
                 actions.innerHTML = `<button onclick="closePaymentModal()">Закрыть</button>`;
-                console.error(error);
             }
         }
 
-        async function confirmPayment(productId) {
-            const p = products.find(x => x.id === productId);
+        async function startPaymentCheck(p, orderId) {
+            let attempts = 0;
+            const maxAttempts = 18; // 18 × 10 сек = 3 минуты
             
-            try {
-                const response = await fetch(`${SERVER_URL}/check-payment?order_id=${lastOrderId}`);
-                const data = await response.json();
+            const checkInterval = setInterval(async () => {
+                attempts++;
                 
-                if (data.status === 'CONFIRMED' || data.status === 'confirmed' || data.status === 'paid' || data.status === 7) {
-                    const newOrder = {
-                        userId: user.id,
-                        productId: p.id,
-                        date: new Date().toLocaleDateString('ru-RU'),
-                        fileName: p.file || null,
-                        status: 'Оплачен',
-                        testCode: p.testCode || null
-                    };
-                    orders.push(newOrder);
-                    saveOrders();
+                try {
+                    const response = await fetch(`${SERVER_URL}/check-payment?order_id=${orderId}`);
+                    const data = await response.json();
                     
-                    const title = document.getElementById('payment-modal-title');
-                    const text = document.getElementById('payment-modal-text');
-                    const actions = document.getElementById('payment-modal-actions');
-                    
-                    title.textContent = 'Успешно! 🎉';
-                    
-                    if (p.testCode) {
-                        text.innerHTML = `
-                            <p style="color: #22c55e; font-weight: 700; font-size: 16px; margin-bottom: 10px;">Оплата подтверждена!</p>
-                            <p>Ваш код:</p>
-                            <div style="padding: 12px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; font-family: monospace; margin: 10px 0; word-break: break-all;">${p.testCode}</div>
-                            <p style="font-size: 12px; color: var(--text-secondary);">Код также сохранён в разделе "Мои заказы"</p>
-                        `;
-                    } else {
-                        text.innerHTML = `
-                            <p style="color: #22c55e; font-weight: 700; font-size: 16px; margin-bottom: 10px;">Оплата подтверждена!</p>
-                            <p>Ваш файл готов к скачиванию:</p>
-                            <a href="${GITHUB_FILES_URL}${p.file}" target="_blank" style="display: block; padding: 14px; background: var(--accent); color: var(--accent-text); border-radius: 12px; font-weight: 700; text-decoration: none; margin: 15px 0;">
-                                📥 Скачать ${p.file}
-                            </a>
-                            <p style="font-size: 12px; color: var(--text-secondary);">Файл также сохранён в разделе "Мои заказы"</p>
-                        `;
+                    if (data.status === 'CONFIRMED' || data.status === 'confirmed' || data.status === 'paid' || data.status === 7) {
+                        clearInterval(checkInterval);
+                        updateOrderStatus(orderId, 'completed');
+                        showPaymentSuccess(p);
                     }
-                    
-                    actions.innerHTML = `<button onclick="closePaymentModal(); showPage('orders');" style="background: transparent; border: 1px solid var(--border);">Перейти к заказам</button>`;
-                } else {
-                    showToast('Оплата ещё не поступила');
+                } catch (e) {
+                    // Игнорируем
                 }
-            } catch (error) {
-                console.error('Error checking payment:', error);
-                showToast('Ошибка проверки оплаты');
+                
+                if (attempts >= maxAttempts) {
+                    clearInterval(checkInterval);
+                    updateOrderStatus(orderId, 'cancelled');
+                    
+                    const text = document.getElementById('payment-modal-text');
+                    text.innerHTML = `
+                        <div style="text-align: center; padding: 20px 0;">
+                            <div style="font-size: 40px; margin-bottom: 16px;">🤔</div>
+                            <p style="font-weight: 700; margin-bottom: 8px;">Оплата не подтверждена</p>
+                            <p style="font-size: 13px; color: var(--text-secondary);">
+                                Если вы оплатили — обратитесь в поддержку
+                            </p>
+                        </div>
+                    `;
+                }
+            }, 10000);
+        }
+
+        function showPaymentSuccess(p) {
+            const title = document.getElementById('payment-modal-title');
+            const text = document.getElementById('payment-modal-text');
+            const actions = document.getElementById('payment-modal-actions');
+            
+            title.textContent = 'Успешно! 🎉';
+            
+            if (p.testCode) {
+                text.innerHTML = `
+                    <div style="text-align: center; padding: 20px 0;">
+                        <div style="font-size: 48px; margin-bottom: 16px;">✅</div>
+                        <p style="color: #22c55e; font-weight: 700; font-size: 16px; margin-bottom: 16px;">Оплата подтверждена!</p>
+                        <p style="font-size: 14px; margin-bottom: 8px;">Ваш код:</p>
+                        <div style="padding: 12px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; font-family: monospace; margin: 10px 0; word-break: break-all; cursor: pointer;" onclick="copyCode(this)">${p.testCode}</div>
+                        <p style="font-size: 12px; color: var(--text-secondary);">Нажмите на код, чтобы скопировать</p>
+                    </div>
+                `;
+            } else {
+                text.innerHTML = `
+                    <div style="text-align: center; padding: 20px 0;">
+                        <div style="font-size: 48px; margin-bottom: 16px;">✅</div>
+                        <p style="color: #22c55e; font-weight: 700; font-size: 16px; margin-bottom: 16px;">Оплата подтверждена!</p>
+                        <a href="${GITHUB_FILES_URL}${p.file}" target="_blank" style="display: block; padding: 14px; background: var(--accent); color: var(--accent-text); border-radius: 12px; font-weight: 700; text-decoration: none;">
+                            📥 Скачать ${p.file}
+                        </a>
+                    </div>
+                `;
             }
+            
+            actions.innerHTML = `<button onclick="closePaymentModal(); showPage('orders');" style="background: transparent; border: 1px solid var(--border);">Перейти к заказам</button>`;
         }
 
         function closePaymentModal() {

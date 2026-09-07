@@ -24,14 +24,10 @@
         .search-bar input:focus { border-color: var(--text-secondary); }
         .search-bar input::placeholder { color: var(--text-secondary); }
         
-        /* КАРУСЕЛЬ БАННЕРОВ */
-        .banner-carousel { position: relative; overflow: hidden; border-radius: 16px; margin: 16px 20px 0; border: 1px solid var(--border); height: 180px; }
-        .banner-track { display: flex; transition: transform 0.5s ease; height: 100%; }
-        .banner-slide { min-width: 100%; height: 100%; }
-        .banner-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .banner-dots { display: flex; justify-content: center; gap: 6px; padding: 10px 0 0; }
-        .banner-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--bg-tertiary); border: none; cursor: pointer; transition: all 0.3s; }
-        .banner-dot.active { background: var(--accent); width: 20px; border-radius: 4px; }
+        /* БАННЕР */
+        .banner-container { padding: 16px 20px 0; }
+        .banner-wrapper { border-radius: 16px; overflow: hidden; border: 1px solid var(--border); }
+        .banner-wrapper img { width: 100%; height: 180px; object-fit: cover; display: block; }
         
         .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 16px 20px; }
         .product-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; cursor: pointer; transition: transform 0.2s, border-color 0.2s; position: relative; display: flex; flex-direction: column; }
@@ -123,16 +119,11 @@
                 <div class="search-bar"><input type="text" placeholder="Поиск ботов..." id="search-input"></div>
             </div>
             
-            <!-- КАРУСЕЛЬ БАННЕРОВ -->
-            <div class="banner-carousel">
-                <div class="banner-track" id="banner-track">
-                    <div class="banner-slide"><img src="img/Banner1.png" alt="QuickMarket"></div>
-                    <div class="banner-slide"><img src="img/Banner2.png" alt="Скидки"></div>
+            <!-- БАННЕР -->
+            <div class="banner-container">
+                <div class="banner-wrapper">
+                    <img src="img/Banner1.png" alt="Добро пожаловать в QuickMarket">
                 </div>
-            </div>
-            <div class="banner-dots" id="banner-dots">
-                <button class="banner-dot active" onclick="goToSlide(0)"></button>
-                <button class="banner-dot" onclick="goToSlide(1)"></button>
             </div>
             
             <div class="products-grid" id="products-grid"></div>
@@ -382,45 +373,7 @@
         let orders = JSON.parse(localStorage.getItem('qm_orders') || '[]');
         const user = tg?.initDataUnsafe?.user || { first_name: 'Гость', username: 'guest', id: 0 };
         let currentProductId = null;
-        let currentSlide = 0;
         let lastOrderId = null;
-
-        // КАРУСЕЛЬ
-        function goToSlide(index) {
-            currentSlide = index;
-            const track = document.getElementById('banner-track');
-            track.style.transform = `translateX(-${index * 100}%)`;
-            document.querySelectorAll('.banner-dot').forEach((dot, i) => {
-                dot.classList.toggle('active', i === index);
-            });
-        }
-
-        function nextSlide() {
-            const totalSlides = document.querySelectorAll('.banner-slide').length;
-            goToSlide((currentSlide + 1) % totalSlides);
-        }
-
-        setInterval(nextSlide, 20000);
-
-        let touchStartX = 0;
-        let touchEndX = 0;
-        const carousel = document.querySelector('.banner-carousel');
-        
-        carousel.addEventListener('touchstart', (e) => {
-            touchStartX = e.touches[0].clientX;
-        });
-        
-        carousel.addEventListener('touchend', (e) => {
-            touchEndX = e.changedTouches[0].clientX;
-            const diff = touchStartX - touchEndX;
-            if (Math.abs(diff) > 50) {
-                if (diff > 0) {
-                    nextSlide();
-                } else {
-                    goToSlide((currentSlide - 1 + 2) % 2);
-                }
-            }
-        });
 
         function showToast(msg) {
             const t = document.getElementById('toast');

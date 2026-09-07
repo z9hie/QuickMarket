@@ -517,7 +517,7 @@
 
         async function showPaymentModal() {
             const p = products.find(x => x.id === currentProductId);
-            if (!p || !p.available) return;
+            if (!p || p.available === false) return;
 
             const modal = document.getElementById('payment-modal');
             const title = document.getElementById('payment-modal-title');

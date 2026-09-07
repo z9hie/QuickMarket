@@ -25,8 +25,8 @@
         .search-bar input::placeholder { color: var(--text-secondary); }
         
         /* БАННЕР */
-        .banner-container { padding: 16px 20px 0; }
-        .banner-wrapper { border-radius: 16px; overflow: hidden; border: 1px solid var(--border); width: 100%; max-width: 440px; height: 180px; cursor: pointer; }
+        .banner-container { padding: 16px 20px 0; width: 100%; }
+        .banner-wrapper { border-radius: 16px; overflow: hidden; border: 1px solid var(--border); width: 100%; height: 180px; cursor: pointer; box-sizing: border-box; }
         .banner-wrapper img { width: 100%; height: 100%; object-fit: cover; display: block; }
         
         .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 16px 20px; }
@@ -37,7 +37,6 @@
         .product-image-placeholder { width: 100%; aspect-ratio: 16/10; background: var(--bg-tertiary); display: flex; align-items: center; justify-content: center; border-bottom: 1px solid var(--border); }
         .product-image-placeholder svg { width: 32px; height: 32px; stroke: var(--text-secondary); fill: none; stroke-width: 1.5; }
         
-        /* БЕЙДЖ NEW */
         .product-badge-new { position: absolute; top: 8px; left: 8px; width: 40px; height: 22px; z-index: 2; }
         .product-badge-new img { width: 100%; height: 100%; object-fit: contain; }
         
@@ -48,8 +47,6 @@
         .product-info { padding: 12px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
         .product-type { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); margin-bottom: 4px; }
         .product-name { font-size: 14px; font-weight: 600; line-height: 1.3; margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        
-        /* ЦЕНА И СКИДКА */
         .product-price-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
         .product-price { font-size: 16px; font-weight: 700; color: var(--text-primary); }
         .product-old-price { font-size: 12px; color: var(--text-secondary); text-decoration: line-through; }
@@ -370,7 +367,10 @@
             { id: 4, type: "bot", name: "Бот Парсер", price: 1290, oldPrice: 1518, image: "", description: "Сбор данных из указанных чатов или каналов по ключевым словам. Экспорт результатов в Excel/CSV.", file: "parser_bot.zip", isNew: false, available: true },
             { id: 5, type: "bot", name: "WebApp бот (Магазин)", price: 2490, oldPrice: 2929, image: "", description: "Полноценный магазин внутри Telegram с каталогом, корзиной, избранным и интеграцией платежей.", file: "webapp_shop_bot.zip", isNew: false, available: true },
             { id: 6, type: "bot", name: "Автовыдача товаров", price: 1290, oldPrice: 1518, image: "", description: "Мгновенная автоматическая выдача цифровых товаров (файлы, ключи, ссылки) после успешной оплаты.", file: "autodelivery_bot.zip", isNew: false, available: true },
-            { id: 7, type: "custom", name: "Кастомный бот под ТЗ", price: 2990, oldPrice: null, image: "", description: "Индивидуальная разработка бота любой сложности под ваши уникальные бизнес-задачи.", file: null, isNew: false, available: false }
+            { id: 7, type: "bot", name: "Бот Рассылка", price: 1490, oldPrice: 1753, image: "", description: "Массовая рассылка сообщений по пользователям. Расписание, статистика открытий, сегментация аудитории.", file: "mailing_bot.zip", isNew: true, available: true },
+            { id: 8, type: "bot", name: "Бот Опросы", price: 790, oldPrice: 929, image: "", description: "Создание опросов и голосований. Анонимные или публичные, с таймером и экспортом результатов.", file: "survey_bot.zip", isNew: true, available: true },
+            { id: 9, type: "bot", name: "Бот Автоответчик", price: 590, oldPrice: 694, image: "", description: "Автоматические ответы на сообщения. Ключевые слова, расписание, приветствие и прощание.", file: "autoreply_bot.py", isNew: true, available: true },
+            { id: 10, type: "custom", name: "Кастомный бот под ТЗ", price: 2990, oldPrice: null, image: "", description: "Индивидуальная разработка бота любой сложности под ваши уникальные бизнес-задачи.", file: null, isNew: false, available: false }
         ];
 
         let favorites = JSON.parse(localStorage.getItem('qm_fav') || '[]');
@@ -636,7 +636,6 @@
         document.querySelectorAll('.nav-item').forEach(item => item.addEventListener('click', () => showPage(item.dataset.page)));
         document.getElementById('search-input').addEventListener('input', renderProducts);
 
-        // Профиль
         document.getElementById('profile-name').textContent = user.first_name || 'Пользователь';
         document.getElementById('profile-username').textContent = '@' + (user.username || 'user');
         

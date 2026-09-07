@@ -24,10 +24,14 @@
         .search-bar input:focus { border-color: var(--text-secondary); }
         .search-bar input::placeholder { color: var(--text-secondary); }
         
-        /* БАННЕР */
-        .banner-container { padding: 16px 20px 0; }
-        .banner-wrapper { border-radius: 16px; overflow: hidden; border: 1px solid var(--border); }
-        .banner-wrapper img { width: 100%; height: auto; aspect-ratio: 440/180; object-fit: contain; display: block; }
+        /* КАРУСЕЛЬ БАННЕРОВ */
+        .banner-carousel { position: relative; overflow: hidden; border-radius: 16px; margin: 16px 20px 0; border: 1px solid var(--border); height: 180px; }
+        .banner-track { display: flex; transition: transform 0.5s ease; height: 100%; }
+        .banner-slide { min-width: 100%; height: 100%; cursor: pointer; }
+        .banner-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .banner-dots { display: flex; justify-content: center; gap: 6px; padding: 10px 0 0; }
+        .banner-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--bg-tertiary); border: none; cursor: pointer; transition: all 0.3s; }
+        .banner-dot.active { background: var(--accent); width: 20px; border-radius: 4px; }
         
         .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 16px 20px; }
         .product-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; cursor: pointer; transition: transform 0.2s, border-color 0.2s; position: relative; display: flex; flex-direction: column; }
@@ -83,13 +87,15 @@
         .stat-arrow { color: var(--text-secondary); font-size: 18px; }
         .orders-list, .favorites-grid { display: flex; flex-direction: column; gap: 12px; }
         .favorites-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        .order-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; padding: 16px; }
+        .order-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; padding: 16px; cursor: pointer; transition: background 0.2s; }
+        .order-card:active { background: var(--bg-tertiary); }
         .order-name { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
         .order-price { font-size: 14px; color: var(--text-secondary); margin-bottom: 12px; }
         .order-status { display: inline-block; padding: 4px 10px; background: rgba(34, 197, 94, 0.15); color: #22c55e; border-radius: 6px; font-size: 12px; font-weight: 600; }
         .order-date { font-size: 12px; color: var(--text-secondary); margin-top: 8px; }
         .download-btn { display: inline-block; margin-top: 10px; padding: 8px 12px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); text-decoration: none; font-size: 12px; font-weight: 600; transition: background 0.2s; }
         .download-btn:active { background: var(--bg-secondary); }
+        .order-code { margin-top: 10px; padding: 10px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; font-family: monospace; font-size: 12px; word-break: break-all; cursor: text; user-select: all; }
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(9, 9, 11, 0.9); backdrop-filter: blur(20px); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 8px 0 max(8px, env(safe-area-inset-bottom)); z-index: 100; max-width: 480px; margin: 0 auto; }
         .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; padding: 8px 16px; flex: 1; }
         .nav-item svg { width: 24px; height: 24px; stroke: var(--text-secondary); fill: none; stroke-width: 1.8; transition: stroke 0.2s; }
@@ -119,11 +125,20 @@
                 <div class="search-bar"><input type="text" placeholder="Поиск ботов..." id="search-input"></div>
             </div>
             
-            <!-- БАННЕР -->
-            <div class="banner-container">
-                <div class="banner-wrapper">
-                    <img src="img/Banner1.png" alt="Добро пожаловать в QuickMarket">
+            <!-- КАРУСЕЛЬ БАННЕРОВ -->
+            <div class="banner-carousel">
+                <div class="banner-track" id="banner-track">
+                    <div class="banner-slide" onclick="window.open('https://t.me/QuickMarket_News', '_blank')">
+                        <img src="img/tg.png" alt="Наш Telegram канал">
+                    </div>
+                    <div class="banner-slide">
+                        <img src="img/Banner1.png" alt="Добро пожаловать в QuickMarket">
+                    </div>
                 </div>
+            </div>
+            <div class="banner-dots" id="banner-dots">
+                <button class="banner-dot active" onclick="goToSlide(0)"></button>
+                <button class="banner-dot" onclick="goToSlide(1)"></button>
             </div>
             
             <div class="products-grid" id="products-grid"></div>
@@ -360,6 +375,7 @@
         const SERVER_URL = "https://qmarket.z9hie.workers.dev";
 
         const products = [
+            { id: 0, type: "test", name: "Тестовый бот", price: 10, oldPrice: null, image: "", description: "Тестовый бот для проверки оплаты. После оплаты вы получите код.", file: null, isNew: false, available: true, testCode: "Привет! Это тестовый бот. Оплата прошла успешно! 🎉" },
             { id: 1, type: "bot", name: "Бот Автопост", price: 990, oldPrice: 1165, image: "", description: "Автоматический постинг в каналы. Поддержка отложенных публикаций, цветных кнопок, медиа и шаблонов.", file: "autopost_bot.zip", isNew: true, available: true },
             { id: 2, type: "bot", name: "Бот Спамблок", price: 499, oldPrice: 587, image: "", description: "Надёжная защита чата от спама, ссылок и мата. Приветствие новых участников и простая капча.", file: "spam_block_bot.py", isNew: true, available: true },
             { id: 3, type: "bot", name: "Бот для онлайн-записи", price: 990, oldPrice: 1165, image: "", description: "Удобная запись клиентов на услуги. Выбор даты, времени и мгновенная отправка заявки админу.", file: "booking_bot.zip", isNew: true, available: true },
@@ -373,7 +389,45 @@
         let orders = JSON.parse(localStorage.getItem('qm_orders') || '[]');
         const user = tg?.initDataUnsafe?.user || { first_name: 'Гость', username: 'guest', id: 0 };
         let currentProductId = null;
+        let currentSlide = 0;
         let lastOrderId = null;
+
+        // КАРУСЕЛЬ
+        function goToSlide(index) {
+            currentSlide = index;
+            const track = document.getElementById('banner-track');
+            track.style.transform = `translateX(-${index * 100}%)`;
+            document.querySelectorAll('.banner-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+        }
+
+        function nextSlide() {
+            const totalSlides = document.querySelectorAll('.banner-slide').length;
+            goToSlide((currentSlide + 1) % totalSlides);
+        }
+
+        setInterval(nextSlide, 20000);
+
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const carousel = document.querySelector('.banner-carousel');
+        
+        carousel.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+        });
+        
+        carousel.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].clientX;
+            const diff = touchStartX - touchEndX;
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) {
+                    nextSlide();
+                } else {
+                    goToSlide((currentSlide - 1 + 2) % 2);
+                }
+            }
+        });
 
         function showToast(msg) {
             const t = document.getElementById('toast');
@@ -399,7 +453,7 @@
             grid.innerHTML = filtered.map(p => {
                 const isFav = favorites.includes(p.id);
                 const unavailableClass = p.available === false ? 'unavailable' : '';
-                const typeLabel = p.type === 'custom' ? '🛠 ИНДИВИДУАЛЬНО' : '🤖 ГОТОВЫЙ БОТ';
+                const typeLabel = p.type === 'custom' ? '🛠 ИНДИВИДУАЛЬНО' : p.type === 'test' ? '🧪 ТЕСТОВЫЙ' : '🤖 ГОТОВЫЙ БОТ';
                 const badgeNew = p.isNew ? `<div class="product-badge-new"><img src="img/new.png" alt="NEW"></div>` : '';
                 const imageHtml = p.image ? `<img src="${p.image}" class="product-image" alt="${p.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"><div class="product-image-placeholder" style="display:none"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M12 8V4"/><circle cx="12" cy="3" r="1"/></svg></div>` : `<div class="product-image-placeholder"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M12 8V4"/><circle cx="12" cy="3" r="1"/></svg></div>`;
                 const priceHtml = p.available === false ? 
@@ -407,7 +461,7 @@
                     `<div class="product-price-row">
                         <span class="product-price">${p.price} ₽</span>
                         ${p.oldPrice ? `<span class="product-old-price">${p.oldPrice} ₽</span>` : ''}
-                        <div class="product-discount-badge"><img src="img/skidka.png" alt="-15%"></div>
+                        ${p.oldPrice ? `<div class="product-discount-badge"><img src="img/skidka.png" alt="-15%"></div>` : ''}
                     </div>`;
                 
                 return `<div class="product-card ${unavailableClass}" onclick="showDetail(${p.id})">
@@ -440,7 +494,7 @@
             if (p.image) { imgEl.src = p.image; imgEl.style.display = 'block'; imgEl.onerror = function() { this.style.display = 'none'; }; } 
             else { imgEl.style.display = 'none'; }
             
-            document.getElementById('detail-type').textContent = p.type === 'custom' ? '🛠 ИНДИВИДУАЛЬНАЯ РАЗРАБОТКА' : '🤖 ГОТОВЫЙ TELEGRAM БОТ';
+            document.getElementById('detail-type').textContent = p.type === 'custom' ? '🛠 ИНДИВИДУАЛЬНАЯ РАЗРАБОТКА' : p.type === 'test' ? '🧪 ТЕСТОВЫЙ БОТ' : '🤖 ГОТОВЫЙ TELEGRAM БОТ';
             document.getElementById('detail-name').textContent = p.name;
             document.getElementById('detail-name').dataset.id = p.id;
             document.getElementById('detail-price').textContent = p.available === false ? 'Цена по договорённости' : `${p.price} ₽`;
@@ -465,17 +519,31 @@
             
             list.innerHTML = userOrders.map(o => {
                 const p = products.find(x => x.id === o.productId); if (!p) return '';
-                const downloadBtn = o.fileName ? 
-                    `<a href="${GITHUB_FILES_URL}${o.fileName}" target="_blank" class="download-btn">📥 Скачать ${o.fileName}</a>` : '';
+                
+                let contentHtml = '';
+                if (p.testCode) {
+                    contentHtml = `<div class="order-code" onclick="copyCode(this)">${p.testCode}</div>`;
+                } else if (o.fileName) {
+                    contentHtml = `<a href="${GITHUB_FILES_URL}${o.fileName}" target="_blank" class="download-btn">📥 Скачать ${o.fileName}</a>`;
+                }
                 
                 return `<div class="order-card">
                     <div class="order-name">${p.name}</div>
                     <div class="order-price">${p.price} ₽</div>
                     <span class="order-status">${o.status}</span>
-                    ${downloadBtn}
+                    ${contentHtml}
                     <div class="order-date">${o.date}</div>
                 </div>`;
             }).join('');
+        }
+
+        function copyCode(el) {
+            const text = el.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Код скопирован!');
+            }).catch(() => {
+                showToast('Нажмите и удерживайте для копирования');
+            });
         }
 
         function showPage(name) {
@@ -533,7 +601,7 @@
                         </p>
                     `;
                     actions.innerHTML = `
-                        <button onclick="confirmPayment(${p.id})" style="background: var(--accent); color: var(--accent-text); font-weight: 700; border: none;">✅ Я оплатил (Получить файл)</button>
+                        <button onclick="confirmPayment(${p.id})" style="background: var(--accent); color: var(--accent-text); font-weight: 700; border: none;">✅ Я оплатил (Получить)</button>
                         <button onclick="closePaymentModal()" style="background: transparent; border: 1px solid var(--border);">Отмена</button>
                     `;
                 } else {
@@ -561,8 +629,9 @@
                         userId: user.id,
                         productId: p.id,
                         date: new Date().toLocaleDateString('ru-RU'),
-                        fileName: p.file,
-                        status: 'Оплачен'
+                        fileName: p.file || null,
+                        status: 'Оплачен',
+                        testCode: p.testCode || null
                     };
                     orders.push(newOrder);
                     saveOrders();
@@ -572,14 +641,25 @@
                     const actions = document.getElementById('payment-modal-actions');
                     
                     title.textContent = 'Успешно! 🎉';
-                    text.innerHTML = `
-                        <p style="color: #22c55e; font-weight: 700; font-size: 16px; margin-bottom: 10px;">Оплата подтверждена!</p>
-                        <p>Ваш файл готов к скачиванию:</p>
-                        <a href="${GITHUB_FILES_URL}${p.file}" target="_blank" style="display: block; padding: 14px; background: var(--accent); color: var(--accent-text); border-radius: 12px; font-weight: 700; text-decoration: none; margin: 15px 0;">
-                            📥 Скачать ${p.file}
-                        </a>
-                        <p style="font-size: 12px; color: var(--text-secondary);">Файл также сохранён в разделе "Мои заказы"</p>
-                    `;
+                    
+                    if (p.testCode) {
+                        text.innerHTML = `
+                            <p style="color: #22c55e; font-weight: 700; font-size: 16px; margin-bottom: 10px;">Оплата подтверждена!</p>
+                            <p>Ваш код:</p>
+                            <div style="padding: 12px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; font-family: monospace; margin: 10px 0; word-break: break-all;">${p.testCode}</div>
+                            <p style="font-size: 12px; color: var(--text-secondary);">Код также сохранён в разделе "Мои заказы"</p>
+                        `;
+                    } else {
+                        text.innerHTML = `
+                            <p style="color: #22c55e; font-weight: 700; font-size: 16px; margin-bottom: 10px;">Оплата подтверждена!</p>
+                            <p>Ваш файл готов к скачиванию:</p>
+                            <a href="${GITHUB_FILES_URL}${p.file}" target="_blank" style="display: block; padding: 14px; background: var(--accent); color: var(--accent-text); border-radius: 12px; font-weight: 700; text-decoration: none; margin: 15px 0;">
+                                📥 Скачать ${p.file}
+                            </a>
+                            <p style="font-size: 12px; color: var(--text-secondary);">Файл также сохранён в разделе "Мои заказы"</p>
+                        `;
+                    }
+                    
                     actions.innerHTML = `<button onclick="closePaymentModal(); showPage('orders');" style="background: transparent; border: 1px solid var(--border);">Перейти к заказам</button>`;
                 } else {
                     showToast('Оплата ещё не поступила');

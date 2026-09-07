@@ -23,6 +23,16 @@
         .search-bar input { width: 100%; padding: 12px 16px 12px 44px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; color: var(--text-primary); font-size: 15px; outline: none; transition: border-color 0.2s; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: 14px center; }
         .search-bar input:focus { border-color: var(--text-secondary); }
         .search-bar input::placeholder { color: var(--text-secondary); }
+        
+        /* КАРУСЕЛЬ БАННЕРОВ */
+        .banner-carousel { position: relative; overflow: hidden; border-radius: 16px; margin: 16px 20px 0; border: 1px solid var(--border); }
+        .banner-track { display: flex; transition: transform 0.5s ease; }
+        .banner-slide { min-width: 100%; }
+        .banner-slide img { width: 100%; height: 200px; object-fit: cover; display: block; }
+        .banner-dots { display: flex; justify-content: center; gap: 6px; padding: 10px 0; }
+        .banner-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--bg-tertiary); border: none; cursor: pointer; transition: all 0.3s; }
+        .banner-dot.active { background: var(--accent); width: 20px; border-radius: 4px; }
+        
         .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 16px 20px; }
         .product-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; cursor: pointer; transition: transform 0.2s, border-color 0.2s; position: relative; display: flex; flex-direction: column; }
         .product-card:active { transform: scale(0.97); border-color: var(--text-secondary); }
@@ -100,11 +110,24 @@
             <div class="controls">
                 <div class="search-bar"><input type="text" placeholder="Поиск ботов..." id="search-input"></div>
             </div>
+            
+            <!-- КАРУСЕЛЬ БАННЕРОВ -->
+            <div class="banner-carousel">
+                <div class="banner-track" id="banner-track">
+                    <div class="banner-slide"><img src="img/Banner1.png" alt="QuickMarket"></div>
+                    <div class="banner-slide"><img src="img/Banner2.png" alt="Скидки"></div>
+                </div>
+            </div>
+            <div class="banner-dots" id="banner-dots">
+                <button class="banner-dot active" onclick="goToSlide(0)"></button>
+                <button class="banner-dot" onclick="goToSlide(1)"></button>
+            </div>
+            
             <div class="products-grid" id="products-grid"></div>
             <div class="footer">ver platega | create by <a href="https://t.me/z9hie">@z9hie</a></div>
         </div>
 
-        <!-- ДЕТАЛИ ТОВАРА -->
+        <!-- ОСТАЛЬНЫЕ СЕКЦИИ БЕЗ ИЗМЕНЕНИЙ -->
         <div class="page" id="page-detail">
             <img class="bot-detail-image" id="detail-image" src="" alt="Product" onerror="this.style.display='none'">
             <div class="bot-detail-content">
@@ -118,7 +141,6 @@
             <div class="footer">ver platega | create by <a href="https://t.me/z9hie">@z9hie</a></div>
         </div>
 
-        <!-- ИЗБРАННОЕ -->
         <div class="page" id="page-favorites">
             <div class="page-content">
                 <h2 class="page-title">Избранное</h2>
@@ -127,7 +149,6 @@
             <div class="footer">ver platega | create by <a href="https://t.me/z9hie">@z9hie</a></div>
         </div>
 
-        <!-- ЗАКАЗЫ -->
         <div class="page" id="page-orders">
             <div class="page-content">
                 <h2 class="page-title">Мои заказы</h2>
@@ -136,7 +157,6 @@
             <div class="footer">ver platega | create by <a href="https://t.me/z9hie">@z9hie</a></div>
         </div>
 
-        <!-- ПРОФИЛЬ -->
         <div class="page" id="page-profile">
             <div class="page-content">
                 <div class="profile-header">
@@ -170,7 +190,6 @@
             <div class="footer">ver platega | create by <a href="https://t.me/z9hie">@z9hie</a></div>
         </div>
 
-        <!-- ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ -->
         <div class="page" id="page-terms">
             <div class="page-content">
                 <h2 class="page-title">Пользовательское соглашение</h2>
@@ -184,7 +203,6 @@
             </div>
         </div>
 
-        <!-- ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ -->
         <div class="page" id="page-privacy">
             <div class="page-content">
                 <h2 class="page-title">Политика конфиденциальности</h2>
@@ -195,7 +213,6 @@
             </div>
         </div>
 
-        <!-- НАВИГАЦИЯ -->
         <nav class="bottom-nav">
             <div class="nav-item active" data-page="catalog">
                 <svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><polyline points="9 21 9 14 15 14 15 21"/></svg>
@@ -216,7 +233,6 @@
         </nav>
     </div>
 
-    <!-- Модалка поддержки -->
     <div class="modal-overlay" id="support-modal">
         <div class="modal-box">
             <h3>Поддержка</h3>
@@ -225,7 +241,6 @@
         </div>
     </div>
 
-    <!-- Модалка оплаты -->
     <div class="modal-overlay" id="payment-modal">
         <div class="modal-box">
             <h3 id="payment-modal-title">Оплата</h3>
@@ -240,9 +255,8 @@
         const tg = window.Telegram?.WebApp;
         if (tg) { tg.expand(); tg.ready(); }
         
-        // ⚠️ ЗАМЕНИ ЭТУ ССЫЛКУ НА СВОЙ РЕАЛЬНЫЙ RAW-ПУТЬ К ФАЙЛАМ НА GITHUB
-        // Пример: https://raw.githubusercontent.com/z9hie/quickmarket-files/main/
         const GITHUB_FILES_URL = "https://raw.githubusercontent.com/z9hie/quickmarket-files/main/";
+        const SERVER_URL = "https://qmarket.z9hie.workers.dev"; // Cloudflare Worker
 
         const products = [
             { id: 1, type: "bot", name: "Бот Автопост", price: 990, image: "", description: "Автоматический постинг в каналы. Поддержка отложенных публикаций, цветных кнопок, медиа и шаблонов.", file: "autopost_bot.zip" },
@@ -258,6 +272,46 @@
         let orders = JSON.parse(localStorage.getItem('qm_orders') || '[]');
         const user = tg?.initDataUnsafe?.user || { first_name: 'Гость', username: 'guest', id: 0 };
         let currentProductId = null;
+        let currentSlide = 0;
+
+        // КАРУСЕЛЬ
+        function goToSlide(index) {
+            currentSlide = index;
+            const track = document.getElementById('banner-track');
+            track.style.transform = `translateX(-${index * 100}%)`;
+            document.querySelectorAll('.banner-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+        }
+
+        function nextSlide() {
+            const totalSlides = document.querySelectorAll('.banner-slide').length;
+            goToSlide((currentSlide + 1) % totalSlides);
+        }
+
+        // Автопрокрутка каждые 20 секунд
+        setInterval(nextSlide, 20000);
+
+        // Свайп для карусели
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const carousel = document.querySelector('.banner-carousel');
+        
+        carousel.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+        });
+        
+        carousel.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].clientX;
+            const diff = touchStartX - touchEndX;
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) {
+                    nextSlide();
+                } else {
+                    goToSlide((currentSlide - 1 + 2) % 2);
+                }
+            }
+        });
 
         function showToast(msg) {
             const t = document.getElementById('toast');
@@ -364,7 +418,6 @@
             window.scrollTo(0, 0);
         }
 
-        // === ЛОГИКА ОПЛАТЫ И ВЫДАЧИ ФАЙЛОВ ===
         async function showPaymentModal() {
             const p = products.find(x => x.id === currentProductId);
             if (!p || !p.available) return;
@@ -380,20 +433,22 @@
             modal.classList.add('active');
 
             try {
-                const SERVER_URL = "https://z9hie.pythonanywhere.com";
                 const response = await fetch(`${SERVER_URL}/create-payment`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         amount: p.price * 100,
                         description: `Покупка: ${p.name}`,
-                        order_id: `order_${Date.now()}_${p.id}`
+                        order_id: `order_${Date.now()}_${p.id}_${user.id}`
                     })
                 });
                 const data = await response.json();
 
-                if (data.paymentUrl) {
-                    window.open(data.paymentUrl, '_blank');
+                if (data.redirect || data.url || data.paymentUrl) {
+                    const paymentUrl = data.redirect || data.url || data.paymentUrl;
+                    window.open(paymentUrl, '_blank');
+                    
+                    window.lastOrderId = `order_${Date.now()}_${p.id}_${user.id}`;
                     
                     title.textContent = 'Ожидание оплаты';
                     text.innerHTML = `
@@ -421,34 +476,45 @@
             }
         }
 
-        function confirmPayment(productId) {
+        async function confirmPayment(productId) {
             const p = products.find(x => x.id === productId);
             
-            // Сохраняем заказ в локальную базу
-            const newOrder = {
-                userId: user.id,
-                productId: p.id,
-                date: new Date().toLocaleDateString('ru-RU'),
-                fileName: p.file,
-                status: 'Доставлен'
-            };
-            orders.push(newOrder);
-            saveOrders();
-            
-            const title = document.getElementById('payment-modal-title');
-            const text = document.getElementById('payment-modal-text');
-            const actions = document.getElementById('payment-modal-actions');
-            
-            title.textContent = 'Успешно! 🎉';
-            text.innerHTML = `
-                <p style="color: #22c55e; font-weight: 700; font-size: 16px; margin-bottom: 10px;">Оплата подтверждена!</p>
-                <p>Ваш файл готов к скачиванию:</p>
-                <a href="${GITHUB_FILES_URL}${p.file}" target="_blank" style="display: block; padding: 14px; background: var(--accent); color: var(--accent-text); border-radius: 12px; font-weight: 700; text-decoration: none; margin: 15px 0;">
-                    📥 Скачать ${p.file}
-                </a>
-                <p style="font-size: 12px; color: var(--text-secondary);">Файл также сохранён в разделе "Мои заказы"</p>
-            `;
-            actions.innerHTML = `<button onclick="closePaymentModal(); showPage('orders');" style="background: transparent; border: 1px solid var(--border);">Перейти к заказам</button>`;
+            try {
+                const response = await fetch(`${SERVER_URL}/check-payment?order_id=${window.lastOrderId}`);
+                const data = await response.json();
+                
+                if (data.status === 'CONFIRMED' || data.status === 'confirmed' || data.status === 'paid') {
+                    const newOrder = {
+                        userId: user.id,
+                        productId: p.id,
+                        date: new Date().toLocaleDateString('ru-RU'),
+                        fileName: p.file,
+                        status: 'Оплачен'
+                    };
+                    orders.push(newOrder);
+                    saveOrders();
+                    
+                    const title = document.getElementById('payment-modal-title');
+                    const text = document.getElementById('payment-modal-text');
+                    const actions = document.getElementById('payment-modal-actions');
+                    
+                    title.textContent = 'Успешно! 🎉';
+                    text.innerHTML = `
+                        <p style="color: #22c55e; font-weight: 700; font-size: 16px; margin-bottom: 10px;">Оплата подтверждена!</p>
+                        <p>Ваш файл готов к скачиванию:</p>
+                        <a href="${GITHUB_FILES_URL}${p.file}" target="_blank" style="display: block; padding: 14px; background: var(--accent); color: var(--accent-text); border-radius: 12px; font-weight: 700; text-decoration: none; margin: 15px 0;">
+                            📥 Скачать ${p.file}
+                        </a>
+                        <p style="font-size: 12px; color: var(--text-secondary);">Файл также сохранён в разделе "Мои заказы"</p>
+                    `;
+                    actions.innerHTML = `<button onclick="closePaymentModal(); showPage('orders');" style="background: transparent; border: 1px solid var(--border);">Перейти к заказам</button>`;
+                } else {
+                    showToast('Оплата ещё не поступила');
+                }
+            } catch (error) {
+                console.error('Error checking payment:', error);
+                showToast('Ошибка проверки оплаты');
+            }
         }
 
         function closePaymentModal() {

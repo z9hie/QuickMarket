@@ -25,11 +25,11 @@
         .search-bar input::placeholder { color: var(--text-secondary); }
         
         /* КАРУСЕЛЬ БАННЕРОВ */
-        .banner-carousel { position: relative; overflow: hidden; border-radius: 16px; margin: 16px 20px 0; border: 1px solid var(--border); }
-        .banner-track { display: flex; transition: transform 0.5s ease; }
-        .banner-slide { min-width: 100%; }
-        .banner-slide img { width: 100%; height: 200px; object-fit: cover; display: block; }
-        .banner-dots { display: flex; justify-content: center; gap: 6px; padding: 10px 0; }
+        .banner-carousel { position: relative; overflow: hidden; border-radius: 16px; margin: 16px 20px 0; border: 1px solid var(--border); height: 180px; }
+        .banner-track { display: flex; transition: transform 0.5s ease; height: 100%; }
+        .banner-slide { min-width: 100%; height: 100%; }
+        .banner-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .banner-dots { display: flex; justify-content: center; gap: 6px; padding: 10px 0 0; }
         .banner-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--bg-tertiary); border: none; cursor: pointer; transition: all 0.3s; }
         .banner-dot.active { background: var(--accent); width: 20px; border-radius: 4px; }
         
@@ -124,10 +124,10 @@
             </div>
             
             <div class="products-grid" id="products-grid"></div>
-            <div class="footer">ver platega | create by <a href="https://t.me/z9hie">@z9hie</a></div>
+            <div class="footer">create by <a href="https://t.me/YslStudio">@YslStudio</a></div>
         </div>
 
-        <!-- ОСТАЛЬНЫЕ СЕКЦИИ БЕЗ ИЗМЕНЕНИЙ -->
+        <!-- ДЕТАЛИ ТОВАРА -->
         <div class="page" id="page-detail">
             <img class="bot-detail-image" id="detail-image" src="" alt="Product" onerror="this.style.display='none'">
             <div class="bot-detail-content">
@@ -138,25 +138,28 @@
                 <button class="btn-primary" id="buy-btn" onclick="showPaymentModal()">Оплатить</button>
                 <button class="btn-secondary" onclick="showPage('catalog')">← Назад в каталог</button>
             </div>
-            <div class="footer">ver platega | create by <a href="https://t.me/z9hie">@z9hie</a></div>
+            <div class="footer">create by <a href="https://t.me/YslStudio">@YslStudio</a></div>
         </div>
 
+        <!-- ИЗБРАННОЕ -->
         <div class="page" id="page-favorites">
             <div class="page-content">
                 <h2 class="page-title">Избранное</h2>
                 <div class="favorites-grid" id="favorites-grid"></div>
             </div>
-            <div class="footer">ver platega | create by <a href="https://t.me/z9hie">@z9hie</a></div>
+            <div class="footer">create by <a href="https://t.me/YslStudio">@YslStudio</a></div>
         </div>
 
+        <!-- ЗАКАЗЫ -->
         <div class="page" id="page-orders">
             <div class="page-content">
                 <h2 class="page-title">Мои заказы</h2>
                 <div class="orders-list" id="orders-list"></div>
             </div>
-            <div class="footer">ver platega | create by <a href="https://t.me/z9hie">@z9hie</a></div>
+            <div class="footer">create by <a href="https://t.me/YslStudio">@YslStudio</a></div>
         </div>
 
+        <!-- ПРОФИЛЬ -->
         <div class="page" id="page-profile">
             <div class="page-content">
                 <div class="profile-header">
@@ -187,32 +190,125 @@
                     </div>
                 </div>
             </div>
-            <div class="footer">ver platega | create by <a href="https://t.me/z9hie">@z9hie</a></div>
+            <div class="footer">create by <a href="https://t.me/YslStudio">@YslStudio</a></div>
         </div>
 
+        <!-- ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ -->
         <div class="page" id="page-terms">
             <div class="page-content">
                 <h2 class="page-title">Пользовательское соглашение</h2>
                 <div class="bot-detail-description">
-                    <p style="margin-bottom: 10px;"><strong>1. Общие положения</strong><br>Используя Сервис QuickMarket, Пользователь принимает условия данного Соглашения в полном объёме.</p>
-                    <p style="margin-bottom: 10px;"><strong>2. Характер услуг</strong><br>Сервис предоставляет цифровые товары нематериального характера (скрипты, боты, исходный код).</p>
-                    <p style="margin-bottom: 10px;"><strong>3. Возврат средств</strong><br>В связи с цифровым характером товаров, возврат средств после получения доступа к файлам не осуществляется.</p>
-                    <p><strong>4. Поддержка</strong><br>По всем вопросам: <strong>@qmarket_support</strong></p>
+                    <p style="margin-bottom: 10px; color: var(--text-secondary); font-size: 12px;">Дата актуализации: 07.09.2026</p>
+                    
+                    <p style="margin-bottom: 10px;"><strong>1. Общие положения</strong><br>
+                    1.1. Настоящее Пользовательское соглашение (далее — «Соглашение») регулирует порядок использования онлайн-сервиса QuickMarket (далее — «Сервис»), предоставляемого Администрацией.<br>
+                    1.2. Используя Сервис, включая запуск бота, регистрацию, оплату услуг или получение доступа к материалам, Пользователь подтверждает, что полностью ознакомился с условиями настоящего Соглашения и принимает их в полном объёме.<br>
+                    1.3. В случае несогласия с условиями Соглашения Пользователь обязан прекратить использование Сервиса.</p>
+                    
+                    <p style="margin-bottom: 10px;"><strong>2. Характер услуг и цифровых товаров</strong><br>
+                    2.1. Сервис предоставляет цифровые товары и услуги нематериального характера, включая, но не ограничиваясь: информационные материалы, обучающие программы, консультации, цифровые продукты и сервисные услуги.<br>
+                    2.2. Материалы, предоставляемые через Сервис, могут включать: информацию из открытых источников; авторские материалы Администрации и/или третьих лиц; аналитические обзоры, подборки, рекомендации, структурированные данные.<br>
+                    2.3. Пользователь осознаёт и соглашается, что ценность цифровых товаров и услуг Сервиса заключается в систематизации, анализе, форме подачи, сопровождении, поддержке и обновлениях, а не в эксклюзивности отдельных фрагментов информации.<br>
+                    2.4. Сервис не заявляет и не гарантирует уникальность, исключительность или недоступность отдельных элементов материалов вне Сервиса.</p>
+                    
+                    <p style="margin-bottom: 10px;"><strong>3. Отказ от гарантий и ответственности</strong><br>
+                    3.1. Сервис предоставляется на условиях «AS IS» («как есть»).<br>
+                    3.2. Администрация не гарантирует: соответствие Сервиса ожиданиям Пользователя; достижение каких-либо финансовых, коммерческих, профессиональных или иных результатов; бесперебойную и безошибочную работу Сервиса.<br>
+                    3.3. Администрация не несёт ответственности за: любые прямые или косвенные убытки, включая упущенную выгоду; последствия применения Пользователем полученных материалов; действия или бездействие третьих лиц; временные технические сбои и ограничения доступа.<br>
+                    3.4. Все решения о применении материалов, рекомендаций и услуг принимаются Пользователем самостоятельно и на его риск.</p>
+                    
+                    <p style="margin-bottom: 10px;"><strong>4. Законность использования</strong><br>
+                    4.1. Сервис не предназначен для поощрения, организации или содействия противоправной деятельности.<br>
+                    4.2. Пользователь обязуется использовать Сервис исключительно в рамках применимого законодательства и правил третьих сторон.<br>
+                    4.3. Ответственность за законность использования материалов и услуг Сервиса полностью возлагается на Пользователя.</p>
+                    
+                    <p style="margin-bottom: 10px;"><strong>5. Интеллектуальная собственность</strong><br>
+                    5.1. Все материалы, размещённые в Сервисе, охраняются законодательством об интеллектуальной собственности.<br>
+                    5.2. Пользователю запрещается копировать, распространять, перепродавать, передавать третьим лицам или иным образом использовать материалы Сервиса без разрешения правообладателя.<br>
+                    5.3. Нарушение прав интеллектуальной собственности может повлечь ограничение доступа к Сервису без компенсации.</p>
+                    
+                    <p style="margin-bottom: 10px;"><strong>6. Ограничение доступа</strong><br>
+                    6.1. Администрация вправе приостановить или ограничить доступ Пользователя к Сервису в случае: нарушения условий настоящего Соглашения; выявления злоупотреблений; требований законодательства или платёжных провайдеров.<br>
+                    6.2. Ограничение доступа не освобождает Пользователя от обязательств, возникших ранее.<br>
+                    6.3. Администрация оставляет за собой право отказывать в обслуживании Пользователям, чьи действия могут создавать повышенные риски для Сервиса, платёжных провайдеров или третьих лиц.</p>
+                    
+                    <p style="margin-bottom: 10px;"><strong>7. Платежи и возвраты</strong><br>
+                    7.1. Оплата услуг и цифровых товаров производится на условиях, указанных в Сервисе до момента оплаты.<br>
+                    7.2. В связи с нематериальным характером цифровых товаров и услуг, возврат денежных средств после предоставления доступа не осуществляется, за исключением случаев, указанных ниже.<br>
+                    7.3. Возврат средств возможен только если: услуга не была оказана по технической вине Сервиса; доступ к цифровому товару фактически не был предоставлен.<br>
+                    7.4. Для рассмотрения вопроса о возврате Пользователь обязан обратиться в службу поддержки в течение 24 часов с момента оплаты.<br>
+                    7.5. Решение о возврате принимается Администрацией индивидуально.<br>
+                    7.6. Пользователь подтверждает, что обязуется не инициировать возврат платежа (chargeback) через платёжные системы без предварительного обращения в службу поддержки Сервиса.</p>
+                    
+                    <p style="margin-bottom: 10px;"><strong>8. Конфиденциальность</strong><br>
+                    8.1. Администрация может собирать минимально необходимые технические данные для обеспечения работы Сервиса.<br>
+                    8.2. Администрация принимает разумные меры для защиты данных, однако не гарантирует абсолютную безопасность передаваемой информации.</p>
+                    
+                    <p style="margin-bottom: 10px;"><strong>9. Изменение условий</strong><br>
+                    9.1. Администрация вправе вносить изменения в настоящее Соглашение.<br>
+                    9.2. Актуальная версия Соглашения публикуется в Сервисе.<br>
+                    9.3. Продолжение использования Сервиса означает согласие Пользователя с обновлёнными условиями.</p>
+                    
+                    <p style="margin-bottom: 10px;"><strong>10. Контактная информация</strong><br>
+                    10.1. По всем вопросам Пользователь может обратиться в службу поддержки: <strong>@qmarket_support</strong></p>
+                    
+                    <p style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-secondary);">
+                    Используя Сервис (в том числе запуская бота и/или вводя команду /start), Пользователь подтверждает, что ознакомлен с настоящим Соглашением и принимает его условия в полном объёме.</p>
                 </div>
                 <button class="btn-secondary" onclick="showPage('profile')">← Назад в профиль</button>
             </div>
         </div>
 
+        <!-- ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ -->
         <div class="page" id="page-privacy">
             <div class="page-content">
                 <h2 class="page-title">Политика конфиденциальности</h2>
                 <div class="bot-detail-description">
-                    <p style="margin-bottom: 10px;">Мы собираем минимально необходимые данные (ID Telegram, username) исключительно для функционирования магазина и выдачи купленных товаров. Данные не передаются третьим лицам.</p>
+                    <p style="margin-bottom: 10px; color: var(--text-secondary); font-size: 12px;">Дата актуализации: 07.09.2026</p>
+                    
+                    <p style="margin-bottom: 10px;"><strong>1. Общие положения</strong><br>
+                    1.1. Настоящая Политика конфиденциальности (далее — «Политика») регулирует порядок обработки и защиты информации, которую Пользователь передаёт при использовании сервиса QuickMarket (далее — «Сервис»).<br>
+                    1.2. Используя Сервис, Пользователь подтверждает своё согласие с условиями Политики. Если Пользователь не согласен с условиями — он обязан прекратить использование Сервиса.</p>
+                    
+                    <p style="margin-bottom: 10px;"><strong>2. Сбор информации</strong><br>
+                    2.1. Сервис может собирать следующие типы данных:<br>
+                    • идентификаторы аккаунта (логин, ID, никнейм и т.п.);<br>
+                    • техническую информацию (IP-адрес, данные о браузере, устройстве и операционной системе);<br>
+                    • историю взаимодействий с Сервисом.<br>
+                    2.2. Сервис не требует от Пользователя предоставления паспортных данных, документов, фотографий или другой личной информации, кроме минимально необходимой для работы.</p>
+                    
+                    <p style="margin-bottom: 10px;"><strong>3. Использование информации</strong><br>
+                    3.1. Сервис может использовать полученную информацию исключительно для:<br>
+                    • обеспечения работы функционала;<br>
+                    • связи с Пользователем (в том числе для уведомлений и поддержки);<br>
+                    • анализа и улучшения работы Сервиса.</p>
+                    
+                    <p style="margin-bottom: 10px;"><strong>4. Передача информации третьим лицам</strong><br>
+                    4.1. Администрация не передаёт полученные данные третьим лицам, за исключением случаев:<br>
+                    • если это требуется по закону;<br>
+                    • если это необходимо для исполнения обязательств перед Пользователем (например, при работе с платёжными системами);<br>
+                    • если Пользователь сам дал на это согласие.</p>
+                    
+                    <p style="margin-bottom: 10px;"><strong>5. Хранение и защита данных</strong><br>
+                    5.1. Данные хранятся в течение срока, необходимого для достижения целей обработки.<br>
+                    5.2. Администрация принимает разумные меры для защиты данных, но не гарантирует абсолютную безопасность информации при передаче через интернет.</p>
+                    
+                    <p style="margin-bottom: 10px;"><strong>6. Отказ от ответственности</strong><br>
+                    6.1. Пользователь понимает и соглашается, что передача информации через интернет всегда сопряжена с рисками.<br>
+                    6.2. Администрация не несёт ответственности за утрату, кражу или раскрытие данных, если это произошло по вине третьих лиц или самого Пользователя.</p>
+                    
+                    <p style="margin-bottom: 10px;"><strong>7. Изменения в Политике</strong><br>
+                    7.1. Администрация вправе изменять условия Политики без предварительного уведомления.<br>
+                    7.2. Продолжение использования Сервиса после внесения изменений означает согласие Пользователя с новой редакцией Политики.</p>
+                    
+                    <p style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border);">
+                    По вопросам: <strong>@qmarket_support</strong></p>
                 </div>
                 <button class="btn-secondary" onclick="showPage('profile')">← Назад в профиль</button>
             </div>
         </div>
 
+        <!-- НАВИГАЦИЯ -->
         <nav class="bottom-nav">
             <div class="nav-item active" data-page="catalog">
                 <svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><polyline points="9 21 9 14 15 14 15 21"/></svg>
@@ -233,6 +329,7 @@
         </nav>
     </div>
 
+    <!-- Модалка поддержки -->
     <div class="modal-overlay" id="support-modal">
         <div class="modal-box">
             <h3>Поддержка</h3>
@@ -241,6 +338,7 @@
         </div>
     </div>
 
+    <!-- Модалка оплаты -->
     <div class="modal-overlay" id="payment-modal">
         <div class="modal-box">
             <h3 id="payment-modal-title">Оплата</h3>
@@ -256,7 +354,7 @@
         if (tg) { tg.expand(); tg.ready(); }
         
         const GITHUB_FILES_URL = "https://raw.githubusercontent.com/z9hie/quickmarket-files/main/";
-        const SERVER_URL = "https://qmarket.z9hie.workers.dev"; // Cloudflare Worker
+        const SERVER_URL = "https://qmarket.z9hie.workers.dev";
 
         const products = [
             { id: 1, type: "bot", name: "Бот Автопост", price: 990, image: "", description: "Автоматический постинг в каналы. Поддержка отложенных публикаций, цветных кнопок, медиа и шаблонов.", file: "autopost_bot.zip" },
@@ -273,6 +371,7 @@
         const user = tg?.initDataUnsafe?.user || { first_name: 'Гость', username: 'guest', id: 0 };
         let currentProductId = null;
         let currentSlide = 0;
+        let lastOrderId = null;
 
         // КАРУСЕЛЬ
         function goToSlide(index) {
@@ -289,10 +388,8 @@
             goToSlide((currentSlide + 1) % totalSlides);
         }
 
-        // Автопрокрутка каждые 20 секунд
         setInterval(nextSlide, 20000);
 
-        // Свайп для карусели
         let touchStartX = 0;
         let touchEndX = 0;
         const carousel = document.querySelector('.banner-carousel');
@@ -433,22 +530,24 @@
             modal.classList.add('active');
 
             try {
+                const orderId = `order_${Date.now()}_${p.id}`;
+                lastOrderId = orderId;
+                
                 const response = await fetch(`${SERVER_URL}/create-payment`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        amount: p.price * 100,
+                        amount: p.price,
                         description: `Покупка: ${p.name}`,
-                        order_id: `order_${Date.now()}_${p.id}_${user.id}`
+                        order_id: orderId,
+                        userId: String(user.id),
+                        userName: user.username ? '@' + user.username : ''
                     })
                 });
                 const data = await response.json();
 
-                if (data.redirect || data.url || data.paymentUrl) {
-                    const paymentUrl = data.redirect || data.url || data.paymentUrl;
-                    window.open(paymentUrl, '_blank');
-                    
-                    window.lastOrderId = `order_${Date.now()}_${p.id}_${user.id}`;
+                if (data.paymentUrl) {
+                    window.open(data.paymentUrl, '_blank');
                     
                     title.textContent = 'Ожидание оплаты';
                     text.innerHTML = `
@@ -480,10 +579,10 @@
             const p = products.find(x => x.id === productId);
             
             try {
-                const response = await fetch(`${SERVER_URL}/check-payment?order_id=${window.lastOrderId}`);
+                const response = await fetch(`${SERVER_URL}/check-payment?order_id=${lastOrderId}`);
                 const data = await response.json();
                 
-                if (data.status === 'CONFIRMED' || data.status === 'confirmed' || data.status === 'paid') {
+                if (data.status === 'CONFIRMED' || data.status === 'confirmed' || data.status === 'paid' || data.status === 7) {
                     const newOrder = {
                         userId: user.id,
                         productId: p.id,

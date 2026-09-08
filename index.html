@@ -15,7 +15,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Inter', -apple-system, sans-serif; background-color: var(--bg-primary); color: var(--text-primary); min-height: 100vh; -webkit-font-smoothing: antialiased; }
         
-        /* ЭКРАН ЗАГРУЗКИ */
         #loading-screen {
             position: fixed;
             top: 0;
@@ -85,14 +84,8 @@
         }
         
         @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .app { max-width: 480px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; position: relative; overflow-x: hidden; }
@@ -111,9 +104,6 @@
         .product-card.unavailable { opacity: 0.5; pointer-events: none; }
         .product-image-placeholder { width: 100%; aspect-ratio: 16/10; background: var(--bg-tertiary); display: flex; align-items: center; justify-content: center; border-bottom: 1px solid var(--border); }
         .product-image-placeholder svg { width: 32px; height: 32px; stroke: var(--text-secondary); fill: none; stroke-width: 1.5; }
-        
-        .product-badge-new { position: absolute; top: 8px; left: 8px; width: 40px; height: 22px; z-index: 2; }
-        .product-badge-new img { width: 100%; height: 100%; object-fit: contain; }
         
         .product-fav { position: absolute; top: 8px; right: 8px; background: rgba(9, 9, 11, 0.6); backdrop-filter: blur(4px); border: 1px solid var(--border); border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 2; transition: transform 0.2s; }
         .product-fav:active { transform: scale(1.2); }
@@ -146,6 +136,8 @@
         .profile-header { text-align: center; padding: 32px 0 24px; }
         .profile-avatar { width: 80px; height: 80px; background: var(--bg-tertiary); border: 2px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 700; margin: 0 auto 16px; color: var(--text-primary); overflow: hidden; }
         .profile-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+        .profile-settings-icon { position: absolute; bottom: 0; right: 0; width: 28px; height: 28px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .profile-settings-icon svg { width: 14px; height: 14px; stroke: var(--text-secondary); fill: none; stroke-width: 2; }
         .profile-header h2 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
         .profile-header .username { color: var(--text-secondary); font-size: 14px; }
         
@@ -186,7 +178,6 @@
     </style>
 </head>
 <body>
-    <!-- ЭКРАН ЗАГРУЗКИ -->
     <div id="loading-screen">
         <div class="loading-content">
             <div class="loading-logo">QuickMarket</div>
@@ -242,7 +233,15 @@
         <div class="page" id="page-profile">
             <div class="page-content">
                 <div class="profile-header">
-                    <div class="profile-avatar" id="profile-avatar">?</div>
+                    <div style="position: relative; display: inline-block;">
+                        <div class="profile-avatar" id="profile-avatar">?</div>
+                        <div class="profile-settings-icon" onclick="openSupport()">
+                            <svg viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.6 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9c.1.4.38.75.75.91.37.16.8.14 1.16-.06l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 15z"/>
+                            </svg>
+                        </div>
+                    </div>
                     <h2 id="profile-name">Пользователь</h2>
                     <p class="username" id="profile-username">@user</p>
                 </div>
@@ -349,7 +348,6 @@
     <div class="toast" id="toast"></div>
 
     <script>
-        // ЭКРАН ЗАГРУЗКИ
         let progress = 0;
         const loadingScreen = document.getElementById('loading-screen');
         const loadingBar = document.getElementById('loading-bar');
@@ -381,17 +379,17 @@
         const user = tg?.initDataUnsafe?.user || { first_name: 'Гость', username: 'guest', id: 0, photo_url: '' };
 
         const allProducts = [
-            { id: 0, type: "test", name: "Тестовый бот", price: 10, oldPrice: null, image: "", description: "Тестовый бот для проверки оплаты.", file: null, isNew: false, available: true, testCode: "Привет! Это тестовый бот. Оплата прошла успешно! 🎉", hidden: true },
-            { id: 1, type: "bot", name: "Бот Автопост", price: 990, oldPrice: 1165, image: "", description: "Автоматический постинг в каналы.", file: "autopost_bot.zip", isNew: true, available: true },
-            { id: 2, type: "bot", name: "Бот Спамблок", price: 499, oldPrice: 587, image: "", description: "Защита чата от спама.", file: "spam_block_bot.py", isNew: true, available: true },
-            { id: 3, type: "bot", name: "Бот для онлайн-записи", price: 990, oldPrice: 1165, image: "", description: "Запись клиентов на услуги.", file: "booking_bot.zip", isNew: true, available: true },
-            { id: 4, type: "bot", name: "Бот Парсер", price: 1290, oldPrice: 1518, image: "", description: "Сбор данных из чатов.", file: "parser_bot.zip", isNew: false, available: true },
-            { id: 5, type: "bot", name: "WebApp бот (Магазин)", price: 2490, oldPrice: 2929, image: "", description: "Магазин внутри Telegram.", file: "webapp_shop_bot.zip", isNew: false, available: true },
-            { id: 6, type: "bot", name: "Автовыдача товаров", price: 1290, oldPrice: 1518, image: "", description: "Автоматическая выдача товаров.", file: "autodelivery_bot.zip", isNew: false, available: true },
-            { id: 7, type: "bot", name: "Бот Рассылка", price: 1490, oldPrice: 1753, image: "", description: "Массовая рассылка сообщений.", file: "mailing_bot.zip", isNew: true, available: true },
-            { id: 8, type: "bot", name: "Бот Опросы", price: 790, oldPrice: 929, image: "", description: "Создание опросов.", file: "survey_bot.zip", isNew: true, available: true },
-            { id: 9, type: "bot", name: "Бот Автоответчик", price: 590, oldPrice: 694, image: "", description: "Автоматические ответы.", file: "autoreply_bot.py", isNew: true, available: true },
-            { id: 10, type: "custom", name: "Кастомный бот под ТЗ", price: 2990, oldPrice: null, image: "", description: "Индивидуальная разработка.", file: null, isNew: false, available: false }
+            { id: 0, type: "test", name: "Тестовый бот", price: 10, oldPrice: null, image: "", description: "Тестовый бот для проверки оплаты. Пример: @QuickMarketRobot", file: null, isNew: false, available: true, testCode: "Привет! Это тестовый бот. Оплата прошла успешно! 🎉", hidden: true },
+            { id: 1, type: "bot", name: "Бот Автопост", price: 990, oldPrice: 1165, image: "", description: "Автоматический постинг в каналы. Поддержка отложенных публикаций, цветных кнопок, медиа и шаблонов. Расписание публикаций, автопостинг из RSS, редактирование постов перед публикацией. Пример: @autopost_example_bot", file: "autopost_bot.zip", isNew: false, available: true },
+            { id: 2, type: "bot", name: "Бот Спамблок", price: 499, oldPrice: 587, image: "", description: "Надёжная защита чата от спама, ссылок и мата. Блокировка мата на 4 языках, защита от спама (5+ сообщений за 5 сек), удаление запрещённых ссылок. Команды: !бан, !мут, !анбан, !анмут. Пример: @spam_block_example_bot", file: "spam_block_bot.py", isNew: false, available: true },
+            { id: 3, type: "bot", name: "Бот для онлайн-записи", price: 990, oldPrice: 1165, image: "", description: "Удобная запись клиентов на услуги. Выбор даты, времени, отправка заявки админу. Календарь, напоминания клиентам, экспорт записей в Excel. Пример: @booking_example_bot", file: "booking_bot.zip", isNew: false, available: true },
+            { id: 4, type: "bot", name: "Бот Парсер", price: 1290, oldPrice: 1518, image: "", description: "Сбор данных из чатов и каналов по ключевым словам. Экспорт в Excel/CSV, фильтры, автопарсинг по расписанию. Пример: @parser_example_bot", file: "parser_bot.zip", isNew: false, available: true },
+            { id: 5, type: "bot", name: "WebApp бот (Магазин)", price: 2490, oldPrice: 2929, image: "", description: "Полноценный магазин внутри Telegram. Каталог, корзина, избранное, оплата через Platega, система заказов. Пример: @QuickMarketRobot", file: "webapp_shop_bot.zip", isNew: false, available: true },
+            { id: 6, type: "bot", name: "Автовыдача товаров", price: 1290, oldPrice: 1518, image: "", description: "Мгновенная автоматическая выдача цифровых товаров после оплаты. Поддержка файлов, ключей, ссылок. Интеграция с Platega. Пример: @autodelivery_example_bot", file: "autodelivery_bot.zip", isNew: false, available: true },
+            { id: 7, type: "bot", name: "Бот Рассылка", price: 1490, oldPrice: 1753, image: "", description: "Массовая рассылка сообщений по пользователям. Расписание, статистика открытий, сегментация аудитории. Пример: @mailing_example_bot", file: "mailing_bot.zip", isNew: false, available: true },
+            { id: 8, type: "bot", name: "Бот Опросы", price: 790, oldPrice: 929, image: "", description: "Создание опросов и голосований. Анонимные или публичные, с таймером и экспортом результатов. Пример: @survey_example_bot", file: "survey_bot.zip", isNew: false, available: true },
+            { id: 9, type: "bot", name: "Бот Автоответчик", price: 590, oldPrice: 694, image: "", description: "Автоматические ответы на сообщения. Ключевые слова, расписание, приветствие и прощание. Пример: @autoreply_example_bot", file: "autoreply_bot.py", isNew: false, available: true },
+            { id: 10, type: "custom", name: "Кастомный бот под ТЗ", price: 2990, oldPrice: null, image: "", description: "Индивидуальная разработка бота любой сложности. Вы описываете задачи — мы реализуем. Пример: любой бот по вашему ТЗ", file: null, isNew: false, available: false }
         ];
 
         const products = allProducts.filter(p => !p.hidden || user.id === ADMIN_ID);
@@ -427,7 +425,6 @@
                 const isFav = favorites.includes(p.id);
                 const unavailableClass = p.available === false ? 'unavailable' : '';
                 const typeLabel = p.type === 'custom' ? '🛠 ИНДИВИДУАЛЬНО' : p.type === 'test' ? '🧪 ТЕСТОВЫЙ' : '🤖 ГОТОВЫЙ БОТ';
-                const badgeNew = p.isNew ? `<div class="product-badge-new"><img src="img/new.png" alt="NEW"></div>` : '';
                 const imageHtml = `<div class="product-image-placeholder"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M12 8V4"/><circle cx="12" cy="3" r="1"/></svg></div>`;
                 const priceHtml = p.available === false ? 
                     '<div class="product-price">По запросу</div>' : 
@@ -438,7 +435,6 @@
                     </div>`;
                 
                 return `<div class="product-card ${unavailableClass}" onclick="showDetail(${p.id})">
-                    ${badgeNew}
                     <button class="product-fav ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFav(${p.id})"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
                     ${imageHtml}
                     <div class="product-info">
@@ -465,8 +461,14 @@
             
             document.getElementById('detail-type').textContent = p.type === 'custom' ? '🛠 ИНДИВИДУАЛЬНАЯ РАЗРАБОТКА' : p.type === 'test' ? '🧪 ТЕСТОВЫЙ БОТ' : '🤖 ГОТОВЫЙ TELEGRAM БОТ';
             document.getElementById('detail-name').textContent = p.name;
-            document.getElementById('detail-price').textContent = p.available === false ? 'Цена по договорённости' : `${p.price} ₽`;
-            document.getElementById('detail-description').textContent = p.description || 'Описание отсутствует';
+            
+            const priceHtml = p.available === false ? 
+                'Цена по договорённости' : 
+                `${p.price} ₽ ${p.oldPrice ? `<span style="font-size: 16px; color: var(--text-secondary); text-decoration: line-through;">${p.oldPrice} ₽</span> <span style="font-size: 14px; color: #22c55e;">-15%</span>` : ''}`;
+            document.getElementById('detail-price').innerHTML = priceHtml;
+            
+            const descHtml = `${p.description || ''}<br><br><span style="font-size: 12px; color: var(--text-secondary);">📌 <i>ТЗ (техническое задание) — это описание того, что должен делать бот: команды, функции, интеграции и т.д.</i></span><br><br><span style="font-size: 12px; color: var(--text-secondary);">💬 После оплаты вы можете прислать @qmarket_support ваше ТЗ и мы доработаем бота под ваши задачи.</span>`;
+            document.getElementById('detail-description').innerHTML = descHtml;
             
             const buyBtn = document.getElementById('buy-btn');
             if (p.available === false) {

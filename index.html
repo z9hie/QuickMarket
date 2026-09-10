@@ -41,7 +41,6 @@
         .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 16px 20px; }
         .product-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; cursor: pointer; transition: transform 0.2s, border-color 0.2s; position: relative; display: flex; flex-direction: column; }
         .product-card:active { transform: scale(0.97); border-color: var(--text-secondary); }
-        .product-card.unavailable { opacity: 0.5; pointer-events: none; }
         .product-image { width: 100%; aspect-ratio: 16/10; object-fit: cover; border-bottom: 1px solid var(--border); background: var(--bg-tertiary); }
         .product-image-placeholder { width: 100%; aspect-ratio: 16/10; background: var(--bg-tertiary); display: flex; align-items: center; justify-content: center; border-bottom: 1px solid var(--border); }
         .product-image-placeholder svg { width: 32px; height: 32px; stroke: var(--text-secondary); fill: none; stroke-width: 1.5; }
@@ -60,11 +59,11 @@
         .page-content { padding: 0 20px; flex: 1; }
         .page-title { font-size: 28px; font-weight: 800; margin: 20px 0 16px; letter-spacing: -0.5px; }
 
-        /* ГАЛЕРЕЯ - адаптивная */
-        .gallery { position: relative; width: 100%; background: var(--bg-tertiary); border-bottom: 1px solid var(--border); overflow: hidden; }
-        .gallery-track { display: flex; height: 100%; transition: transform 0.3s ease; }
-        .gallery-slide { min-width: 100%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: var(--bg-tertiary); }
-        .gallery-slide img { width: 100%; height: auto; max-height: 70vh; object-fit: contain; display: block; }
+        /* ГАЛЕРЕЯ - адаптивная под размер фото */
+        .gallery { position: relative; width: 100%; background: var(--bg-tertiary); border-bottom: 1px solid var(--border); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .gallery-track { display: flex; transition: transform 0.3s ease; width: 100%; }
+        .gallery-slide { min-width: 100%; display: flex; align-items: center; justify-content: center; padding: 0; }
+        .gallery-slide img { max-width: 100%; max-height: 60vh; width: auto; height: auto; object-fit: contain; display: block; }
         .gallery-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; background: rgba(9, 9, 11, 0.7); backdrop-filter: blur(4px); border: 1px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 2; }
         .gallery-arrow.prev { left: 12px; }
         .gallery-arrow.next { right: 12px; }
@@ -113,16 +112,20 @@
         .nav-item.active span { color: var(--text-primary); }
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); z-index: 200; align-items: center; justify-content: center; padding: 20px; }
         .modal-overlay.active { display: flex; }
-        .modal-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 20px; padding: 24px; max-width: 360px; width: 100%; text-align: center; }
-        .modal-box h3 { font-size: 18px; margin-bottom: 8px; }
-        .modal-box p { color: var(--text-secondary); font-size: 14px; margin-bottom: 20px; line-height: 1.5; }
-        .modal-box button { width: 100%; padding: 14px; background: transparent; border: 1px solid var(--border); border-radius: 12px; color: var(--text-primary); font-size: 15px; cursor: pointer; margin-top: 8px; }
-        .pay-method { display: flex; flex-direction: column; gap: 8px; margin: 16px 0; text-align: left; }
-        .pay-method label { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 12px; cursor: pointer; transition: border-color 0.2s; }
-        .pay-method label:has(input:checked) { border-color: #fff; background: #27272a; }
-        .pay-method input { accent-color: #fff; }
-        .pay-method span { font-size: 14px; font-weight: 500; }
-        .pay-method small { font-size: 11px; color: var(--text-secondary); display: block; }
+        .modal-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 20px; padding: 20px; max-width: 340px; width: 100%; text-align: center; max-height: 85vh; overflow-y: auto; }
+        .modal-box h3 { font-size: 17px; margin-bottom: 8px; }
+        .modal-box p { color: var(--text-secondary); font-size: 14px; margin-bottom: 16px; line-height: 1.5; }
+        .modal-box button { width: 100%; padding: 13px; background: transparent; border: 1px solid var(--border); border-radius: 12px; color: var(--text-primary); font-size: 14px; cursor: pointer; margin-top: 8px; }
+
+        /* КОМПАКТНЫЙ ВЫБОР ОПЛАТЫ */
+        .pay-method { display: flex; flex-direction: column; gap: 6px; margin: 12px 0; text-align: left; }
+        .pay-method label { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; transition: border-color 0.2s; }
+        .pay-method label:has(input:checked) { border-color: #fff; }
+        .pay-method input { accent-color: #fff; flex-shrink: 0; }
+        .pay-method .pm-info { display: flex; flex-direction: column; }
+        .pay-method span { font-size: 13px; font-weight: 500; line-height: 1.2; }
+        .pay-method small { font-size: 10px; color: var(--text-secondary); margin-top: 2px; }
+
         .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 12px; padding: 12px 20px; color: var(--text-primary); font-size: 14px; font-weight: 500; z-index: 300; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); white-space: nowrap; }
         .toast.show { transform: translateX(-50%) translateY(0); }
         .footer { text-align: center; padding: 20px; color: var(--text-secondary); font-size: 12px; margin-top: auto; }
@@ -284,10 +287,9 @@
             if (filtered.length === 0) { grid.innerHTML = '<div class="empty-state"><p>Ничего не найдено</p></div>'; return; }
             grid.innerHTML = filtered.map(p => {
                 const isFav = favorites.includes(p.id);
-                const unavailableClass = p.available === false ? 'unavailable' : '';
                 const imageHtml = p.images && p.images[0] ? `<img src="${p.images[0]}" class="product-image" alt="${p.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"><div class="product-image-placeholder" style="display:none"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M12 8V4"/><circle cx="12" cy="3" r="1"/></svg></div>` : `<div class="product-image-placeholder"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M12 8V4"/><circle cx="12" cy="3" r="1"/></svg></div>`;
                 const priceHtml = p.available === false ? '<div class="product-price">По запросу</div>' : `<div class="product-price-row"><span class="product-price">${p.price} ₽</span>${p.oldPrice ? `<span class="product-old-price">${p.oldPrice} ₽</span>` : ''}</div>`;
-                return `<div class="product-card ${unavailableClass}" onclick="showDetail(${p.id})"><button class="product-fav ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFav(${p.id})"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>${imageHtml}<div class="product-info"><div><div class="product-type">🤖 ГОТОВЫЙ БОТ</div><div class="product-name">${p.name}</div></div>${priceHtml}</div></div>`;
+                return `<div class="product-card" onclick="showDetail(${p.id})"><button class="product-fav ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFav(${p.id})"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>${imageHtml}<div class="product-info"><div><div class="product-type">🤖 ГОТОВЫЙ БОТ</div><div class="product-name">${p.name}</div></div>${priceHtml}</div></div>`;
             }).join('');
         }
 
@@ -307,9 +309,9 @@
                 gallery.style.display = 'none';
                 return;
             }
-            gallery.style.display = 'block';
+            gallery.style.display = 'flex';
             
-            track.innerHTML = images.map(src => `<div class="gallery-slide"><img src="${src}" alt="Фото" onerror="this.parentElement.style.background='var(--bg-tertiary)'"></div>`).join('');
+            track.innerHTML = images.map(src => `<div class="gallery-slide"><img src="${src}" alt="Фото" onerror="this.style.opacity='0.3'"></div>`).join('');
             dots.innerHTML = images.map((_, i) => `<div class="gallery-dot ${i === 0 ? 'active' : ''}" onclick="goToSlide(${i})"></div>`).join('');
             
             currentSlide = 0;
@@ -386,15 +388,12 @@
             const actions = document.getElementById('payment-modal-actions');
             title.textContent = `Оплата: ${p.name}`;
             text.innerHTML = `
-                <div style="margin-bottom:12px;"><strong>${p.price} ₽</strong> <span style="color:var(--text-secondary);font-size:12px;">цена зафиксирована на сервере</span></div>
-                <div style="font-size:13px;margin-bottom:8px;color:var(--text-secondary);">Выберите способ оплаты:</div>
+                <div style="margin-bottom:10px;font-size:15px;"><strong>${p.price} ₽</strong></div>
+                <div style="font-size:12px;margin-bottom:8px;color:var(--text-secondary);">Способ оплаты:</div>
                 <div class="pay-method">
-                    <label><input type="radio" name="paymethod" value="" checked><div><span>🌐 Универсальная форма</span><small>Выбор на сайте Platega: СБП, карта, ЕРИП, крипта</small></div></label>
-                    <label><input type="radio" name="paymethod" value="2"><div><span>💳 СБП QR + SberPay</span><small>QR-код, оплата из приложения банка</small></div></label>
-                    <label><input type="radio" name="paymethod" value="11"><div><span>💳 Банковская карта РФ</span><small>МИР, Visa, Mastercard</small></div></label>
-                    <label><input type="radio" name="paymethod" value="12"><div><span>🌍 Международная карта</span><small>Если включено у мерчанта</small></div></label>
-                    <label><input type="radio" name="paymethod" value="13"><div><span>₿ Криптовалюта</span><small>USDT и др.</small></div></label>
-                    <label><input type="radio" name="paymethod" value="3"><div><span>🏦 ЕРИП</span><small>Беларусь</small></div></label>
+                    <label><input type="radio" name="paymethod" value="2" checked><div class="pm-info"><span>СБП QR</span><small>QR-код для оплаты</small></div></label>
+                    <label><input type="radio" name="paymethod" value="11"><div class="pm-info"><span>Банковская карта</span><small>МИР, Visa, Mastercard</small></div></label>
+                    <label><input type="radio" name="paymethod" value="13"><div class="pm-info"><span>Криптовалюта</span><small>USDT и другие</small></div></label>
                 </div>
             `;
             actions.innerHTML = `<button class="btn-primary" onclick="createPayment()">Перейти к оплате</button><button onclick="closePaymentModal()">Отмена</button>`;
@@ -404,7 +403,7 @@
         async function createPayment() {
             const p = products.find(x => x.id === currentProductId); if (!p) return;
             const selected = document.querySelector('input[name="paymethod"]:checked');
-            selectedPayMethod = selected ? selected.value : '';
+            selectedPayMethod = selected ? selected.value : '2';
             const title = document.getElementById('payment-modal-title');
             const text = document.getElementById('payment-modal-text');
             const actions = document.getElementById('payment-modal-actions');

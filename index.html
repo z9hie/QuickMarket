@@ -144,7 +144,7 @@
     <div class="app">
         <div class="header"><div class="logo">Quick<span>Market</span></div></div>
         <div class="page active" id="page-catalog">
-            <div class="controls"><div class="search-bar"><input type="text" placeholder="Поиск ботов..." id="search-input"></div></div>
+            <div class="controls"><div class="search-bar"><input type="text" placeholder="Поиск товаров..." id="search-input"></div></div>
             <div class="products-grid" id="products-grid"></div>
             <div class="footer">create by <a href="https://t.me/YslStudio">@YslStudio</a></div>
         </div>
@@ -264,6 +264,18 @@
                 description: "Полноценный бот для онлайн-записи клиентов.\n\n<b>Функции:</b>\n• Выбор услуги\n• Выбор даты и времени\n• Цветные слоты (занято/свободно)\n• WebApp календарь\n• Админ-панель\n• Уведомления о записях\n• Настройка услуг и часов\n\n<b>Тестовый бот:</b> @OnlineStrishkabot\n\n<b>После оплаты</b> напишите @qmarket_support или @z9hie — выдадим код и расскажем как поставить на хостинг (бесплатный/платный).",
                 file: "booking_bot.zip",
                 available: true
+            },
+            {
+                id: 2,
+                type: "webapp",
+                name: "VPN Panel WebApp",
+                price: 3990,
+                oldPrice: null,
+                images: ["img/webvpn1.png", "img/webvpn2.png", "img/webvpn3.png", "img/webvpn4.png", "img/webvpn5.png"],
+                description: "🔐 <b>VPN Panel WebApp</b>\n\nПолноценный личный кабинет для VPN-сервиса внутри Telegram!\n\n<b>📱 Что внутри:</b>\n• Статус подписки с прогресс-баром\n• Баланс и пополнение\n• Управление подписками (добавить/изменить/удалить)\n• QR-коды для подключения\n• Копирование VPN-ключей в 1 клик\n• История операций\n• Статистика использования\n\n<b>💳 Оплата:</b>\n• Telegram Stars\n• Карта / СБП (Platega)\n• Криптовалюта (USDT, TON)\n• ЕРИП\n\n<b>👥 Реферальная программа:</b>\n• 50₽ за друга ИЛИ 15% с покупок\n• Выбор типа награды\n• Список приглашённых\n• Автоматическое начисление\n\n<b>🎨 Дизайн:</b>\n• Тёмная и светлая темы\n• Адаптивный интерфейс\n• Плавные анимации\n\n<b>🤖 Бот в комплекте:</b>\n@WebAppVPNbot — приветствие, баланс, рефералы\n\n<b>✨ Что входит в стоимость:</b>\n• Исходный код WebApp (HTML/CSS/JS)\n• Исходный код бота (Python/aiogram)\n• База данных (SQLite)\n• Инструкция по установке\n\n<b>📞 После оплаты:</b>\nНапишите @qmarket_support или @z9hie — поможем:\n• Привязать API оплаты (Platega, Stars)\n• Настроить VPN-панель (3x-ui, WireGuard)\n• Установить на хостинг\n• Настроить домен и SSL\n• Запустить реферальную систему\n\n<b>🎁 Бонус:</b>\n• 30 дней поддержки\n• Помощь с настройкой\n• Бесплатные консультации",
+                file: null,
+                isNew: false,
+                available: true
             }
         ];
 
@@ -289,7 +301,8 @@
                 const isFav = favorites.includes(p.id);
                 const imageHtml = p.images && p.images[0] ? `<img src="${p.images[0]}" class="product-image" alt="${p.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"><div class="product-image-placeholder" style="display:none"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M12 8V4"/><circle cx="12" cy="3" r="1"/></svg></div>` : `<div class="product-image-placeholder"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M12 8V4"/><circle cx="12" cy="3" r="1"/></svg></div>`;
                 const priceHtml = p.available === false ? '<div class="product-price">По запросу</div>' : `<div class="product-price-row"><span class="product-price">${p.price} ₽</span>${p.oldPrice ? `<span class="product-old-price">${p.oldPrice} ₽</span>` : ''}</div>`;
-                return `<div class="product-card" onclick="showDetail(${p.id})"><button class="product-fav ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFav(${p.id})"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>${imageHtml}<div class="product-info"><div><div class="product-type">🤖 ГОТОВЫЙ БОТ</div><div class="product-name">${p.name}</div></div>${priceHtml}</div></div>`;
+                const typeLabel = p.type === 'webapp' ? '📱 WEBAPP' : '🤖 ГОТОВЫЙ БОТ';
+                return `<div class="product-card" onclick="showDetail(${p.id})"><button class="product-fav ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFav(${p.id})"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>${imageHtml}<div class="product-info"><div><div class="product-type">${typeLabel}</div><div class="product-name">${p.name}</div></div>${priceHtml}</div></div>`;
             }).join('');
         }
 
@@ -347,7 +360,7 @@
             
             renderGallery(p.images);
             
-            document.getElementById('detail-type').textContent = '🤖 ГОТОВЫЙ TELEGRAM БОТ';
+            document.getElementById('detail-type').textContent = p.type === 'webapp' ? '📱 WEBAPP РЕШЕНИЕ' : '🤖 ГОТОВЫЙ TELEGRAM БОТ';
             document.getElementById('detail-name').textContent = p.name;
             const priceHtml = p.available === false ? 'Цена по договорённости' : `${p.price} ₽ ${p.oldPrice ? `<span style="font-size:16px;color:var(--text-secondary);text-decoration:line-through;">${p.oldPrice} ₽</span>` : ''}`;
             document.getElementById('detail-price').innerHTML = priceHtml;

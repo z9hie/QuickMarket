@@ -99,7 +99,6 @@ body {
     border-radius: 12px; color: var(--text); font-size: 13px; font-family: inherit; outline: none;
 }
 .header-search input::placeholder { color: var(--text-muted); }
-.header-search input:focus { border-color: var(--border-hover); }
 
 .header-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 .icon-btn {
@@ -1879,7 +1878,6 @@ function renderProductReviews(productId) {
         }
     }
     
-    // Проверяем можем ли оставить отзыв
     checkCanLeaveReview(productId);
 }
 
@@ -2038,7 +2036,6 @@ function toggleBalanceCheck() {
     const cb = document.getElementById('use-balance-check');
     useBalanceChecked = cb ? cb.checked : false;
     if (useBalanceChecked && appliedPromo) {
-        // Нельзя одновременно
         removePromo();
     }
     if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
@@ -2553,6 +2550,12 @@ function openAddProduct() {
                 <label style="display:flex;gap:4px;align-items:center;font-size:12px;"><input type="checkbox" value="recommended" class="f-badge"> Рекомендуем</label>
             </div>
         </div>
+        <div class="form-group">
+            <label style="display:flex;gap:8px;align-items:center;padding:12px;background:var(--green-bg);border:1px solid rgba(34,197,94,0.25);border-radius:11px;cursor:pointer;">
+                <input type="checkbox" id="f-notify" checked style="accent-color:var(--green);">
+                <span style="font-size:13px;font-weight:700;color:var(--green);">Разослать подписчикам</span>
+            </label>
+        </div>
         <button class="btn-primary" onclick="saveProduct()">Сохранить</button>
         <button class="btn-secondary" onclick="closeModal('edit-modal')">Отмена</button>
     `;
@@ -2600,6 +2603,9 @@ async function saveProduct(editId = null) {
     const description = document.getElementById('f-desc').value.trim();
     const description_en = document.getElementById('f-desc-en').value.trim();
     const badges = Array.from(document.querySelectorAll('.f-badge:checked')).map(cb => cb.value);
+    
+    const notifyEl = document.getElementById('f-notify');
+    const notifySubscribers = notifyEl ? notifyEl.checked : false;
 
     if (!name || !price) { showToast('Заполните название и цену', 'error'); return; }
 
@@ -2629,10 +2635,13 @@ async function saveProduct(editId = null) {
         } else {
             const data = await apiPost('/products/add', {
                 userId: user.id,
-                product: productData
+                product: productData,
+                notifySubscribers: notifySubscribers
             });
             if (data.success) {
-                showToast('Добавлено!', 'success');
+                let msg = 'Добавлено!';
+                if (data.notified > 0) msg += ` Разослано: ${data.notified}`;
+                showToast(msg, 'success');
                 closeModal('edit-modal');
                 await loadProducts();
                 renderAll();
